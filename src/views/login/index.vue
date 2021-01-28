@@ -52,7 +52,7 @@
           <svg-icon slot="prefix" icon-class="validCode" class="el-input__icon input-icon" />
         </el-input>
         <div class="login-code">
-          <img :src="captchaCodeUrl" class="login-code-img" @click="getCaptchaCode">
+          <img :src="captchaCodeUrl" class="login-code-img" @click="refreshCode()">
         </div>
       </el-form-item>
       <el-checkbox v-model="loginForm.rememberMe" style="margin:0px 0px 25px 0px;">记住密码</el-checkbox>
@@ -99,8 +99,9 @@ export default {
       }
     }
     return {
-      captchaCodeUrl: process.env.VUE_APP_BASE_API + '/v1/spaceship/captcha-code?randomKey=',
+      captchaCodeUrl: process.env.VUE_APP_BASE_API + '/v1/spaceship/captcha-code?randomKey=' + this.getCaptchaCode(1, 10),
       cookiePassword: '',
+      randomKey: undefined,
       loginForm: {
         username: undefined,
         password: undefined,
@@ -135,6 +136,7 @@ export default {
   },
   created() {
     this.getCookie()
+    this.refreshCode()
     // window.addEventListener('storage', this.afterQRScan)
   },
   mounted() {
@@ -175,6 +177,7 @@ export default {
             Cookies.remove('password')
             Cookies.remove('rememberMe')
           }
+          this.loginForm.randomKey = this.randomKey
           this.$store.dispatch('user/login', this.loginForm)
             .then(() => {
               this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
@@ -182,13 +185,17 @@ export default {
             })
             .catch(() => {
               this.loading = false
-              this.getCaptchaCode()
+              this.refreshCode()
             })
         } else {
           console.log('error submit!!')
           return false
         }
       })
+    },
+    // 切换验证码
+    refreshCode() {
+      this.captchaCodeUrl = process.env.VUE_APP_BASE_API + '/v1/spaceship/captcha-code?randomKey=' + this.getCaptchaCode(1, 10)
     },
     getOtherQuery(query) {
       return Object.keys(query).reduce((acc, cur) => {
@@ -201,9 +208,9 @@ export default {
     forgetPw() {
       this.$router.push({ path: '/forget' })
     },
-    getCaptchaCode() {
-      this.loginForm.randomKey = 1
-      return this.loginForm.randomKey
+    getCaptchaCode(min, max) {
+      this.randomKey = 'captchaCode:randomKey:' + Math.floor(Math.random() * (max - min) + min)
+      return this.randomKey
     },
     getCookie() {
       const username = Cookies.get('username')

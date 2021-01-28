@@ -31,12 +31,12 @@ const mutations = {
 const actions = {
   // user login
   login({ commit }, userInfo) {
-    const { username, password } = userInfo
+    const { username, password, captchaCode, randomKey } = userInfo
     return new Promise((resolve, reject) => {
-      login({ username: username.trim(), password: password }).then(response => {
+      login({ username: username.trim(), password: password, randomKey: randomKey, captchaCode: captchaCode }).then(response => {
         const { data } = response
-        commit('SET_TOKEN', data.token)
-        setToken(data.token)
+        commit('SET_TOKEN', getToken())
+        setToken(getToken())
         resolve()
       }).catch(error => {
         reject(error)
@@ -57,9 +57,9 @@ const actions = {
         const { roles, name, avatar, introduction } = data
 
         // roles must be a non-empty array
-        if (!roles || roles.length <= 0) {
-          reject('getInfo: roles must be a non-null array!')
-        }
+        // if (!roles || roles.length <= 0) {
+        //   reject('getInfo: roles must be a non-null array!')
+        // }
 
         commit('SET_ROLES', roles)
         commit('SET_NAME', name)
