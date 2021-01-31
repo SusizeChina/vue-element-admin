@@ -73,26 +73,57 @@ const actions = {
     })
   }
 }
+function getRouterPath(menuPath) {
+  return '/' + menuPath
+}
+function getRouterName(menuPath) {
+  if (menuPath) {
+    const routerName = menuPath.charAt(0).toUpperCase() + menuPath.slice(1)
+    return routerName
+  }
+  return menuPath
+}
 
 // 遍历后台传来的路由字符串，转换为组件对象
 function formatRouter(asyncRouterMap) {
-  return asyncRouterMap.filter(route => {
-    if (route.component) {
-      // Layout组件特殊处理
-      if (route.component === 'Layout') {
-        route.component = Layout
-      } else {
-        route.component = loadView(route.component)
-      }
+  const routes = []
+  if (!asyncRouterMap) {
+    return true
+  }
+  asyncRouterMap.filter(menu => {
+    const route = {}
+    route.name = getRouterName(menu.path)
+    route.redirect = 'noRedirect'
+    route.hidden = menu.visible !== '0'
+
+    const meta = {}
+    meta.title = menu.menuName
+    meta.icon = menu.icon
+
+    const roles = []
+    roles.push(menu.perms)
+    meta.roles = roles
+    route.meta = meta
+
+    if (menu.menuType === 'M') {
+      route.alwaysShow = true
+      route.path = getRouterPath(menu.path)
+      route.component = Layout
+    } else {
+      route.path = menu.path
+      route.component = loadView(menu.component)
     }
-    if (route.children != null && route.children && route.children.length) {
-      route.children = formatRouter(route.children)
+    if (menu.children != null && menu.children && menu.children.length) {
+      route.children = formatRouter(menu.children)
     }
+    routes.push(route)
     return true
   })
+  return routes
 }
 
 export const loadView = (view) => { // 路由懒加载
+// return () => import(`@/views/${view}`)
   return (resolve) => require([`@/views/${view}`], resolve)
 }
 
