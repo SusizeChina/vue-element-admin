@@ -93,7 +93,6 @@ function formatRouter(asyncRouterMap) {
   asyncRouterMap.filter(menu => {
     const route = {}
     route.name = getRouterName(menu.path)
-    route.redirect = 'noRedirect'
     route.hidden = menu.visible !== '0'
 
     const meta = {}
@@ -106,7 +105,6 @@ function formatRouter(asyncRouterMap) {
     route.meta = meta
 
     if (menu.menuType === 'M') {
-      route.alwaysShow = true
       route.path = getRouterPath(menu.path)
       route.component = Layout
     } else {
@@ -123,7 +121,6 @@ function formatRouter(asyncRouterMap) {
 }
 
 export const loadView = (view) => { // 路由懒加载
-// return () => import(`@/views/${view}`)
   return (resolve) => require([`@/views/${view}`], resolve)
 }
 
