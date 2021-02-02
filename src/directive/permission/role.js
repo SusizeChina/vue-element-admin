@@ -1,18 +1,18 @@
 import store from '@/store'
 
-function checkPermission(el, binding) {
+function checkRole(el, binding) {
   const { value } = binding
-  const permissions = store.getters && store.getters.permissions
+  const roles = store.getters && store.getters.roles
 
   if (value && value instanceof Array) {
     if (value.length > 0) {
-      const permission = value
+      const role = value
 
-      const hasPermission = permissions.some(perm => {
-        return permission.includes(permission)
+      const hasRole = roles.some(ro => {
+        return role.includes(ro)
       })
 
-      if (!hasPermission) {
+      if (!hasRole) {
         el.parentNode && el.parentNode.removeChild(el)
       }
     }
@@ -23,9 +23,9 @@ function checkPermission(el, binding) {
 
 export default {
   inserted(el, binding) {
-    checkPermission(el, binding)
+    checkRole(el, binding)
   },
   update(el, binding) {
-    checkPermission(el, binding)
+    checkRole(el, binding)
   }
 }

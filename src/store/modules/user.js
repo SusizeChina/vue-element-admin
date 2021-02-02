@@ -8,6 +8,7 @@ const state = {
   avatar: '',
   introduction: '',
   roles: [],
+  permissions: [],
   userInfo: undefined
 }
 
@@ -26,6 +27,9 @@ const mutations = {
   },
   SET_ROLES: (state, roles) => {
     state.roles = roles
+  },
+  SET_PERMISSIONS: (state, permissions) => {
+    state.permissions = permissions
   },
   SET_USERINFO: (state, userInfo) => {
     state.userInfo = userInfo
@@ -58,9 +62,10 @@ const actions = {
           reject('Verification failed, please Login again.')
         }
 
-        const { roles, name, avatar, introduction } = data
+        const { roles, name, avatar, introduction, permissions } = data
 
         commit('SET_ROLES', roles)
+        commit('SET_PERMISSIONS', permissions)
         commit('SET_NAME', name)
         commit('SET_AVATAR', avatar || '')
         commit('SET_INTRODUCTION', introduction)

@@ -29,7 +29,7 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
-          v-hasPermi="['system:menu:add']"
+          v-permission="['system:menu:add']"
           type="primary"
           icon="el-icon-plus"
           size="mini"
@@ -63,21 +63,21 @@
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
-            v-hasPermi="['system:menu:edit']"
+            v-permission="['system:menu:edit']"
             size="mini"
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
           >修改</el-button>
           <el-button
-            v-hasPermi="['system:menu:add']"
+            v-permission="['system:menu:add']"
             size="mini"
             type="text"
             icon="el-icon-plus"
             @click="handleAdd(scope.row)"
           >新增</el-button>
           <el-button
-            v-hasPermi="['system:menu:remove']"
+            v-permission="['system:menu:remove']"
             size="mini"
             type="text"
             icon="el-icon-delete"
@@ -298,14 +298,14 @@ export default {
     },
     // 显示状态字典翻译
     visibleFormat(row, column) {
-      if (row.menuType == 'F') {
+      if (row.menuType === 'F') {
         return ''
       }
       return this.selectDictLabel(this.visibleOptions, row.visible)
     },
     // 菜单状态字典翻译
     statusFormat(row, column) {
-      if (row.menuType == 'F') {
+      if (row.menuType === 'F') {
         return ''
       }
       return this.selectDictLabel(this.statusOptions, row.status)
@@ -366,7 +366,7 @@ export default {
     submitForm: function() {
       this.$refs['form'].validate(valid => {
         if (valid) {
-          if (this.form.menuId != undefined) {
+          if (this.form.menuId !== undefined) {
             updateMenu(this.form).then(response => {
               if (response.code === 200) {
                 this.msgSuccess('修改成功')
