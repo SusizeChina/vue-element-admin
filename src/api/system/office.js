@@ -1,0 +1,86 @@
+import request from '@/utils/request'
+import { version } from '@/utils/common'
+/**
+ * 查询机构/部门，返回树形结构
+ * @returns {AxiosPromise} 树形结构机构/部门
+ */
+export function getTreeOffice() {
+  return request({
+    url: version + '/office/tree',
+    method: 'get'
+  })
+}
+
+/**
+ * 新增机构/部门
+ * @param office 机构/部门
+ * @returns {AxiosPromise} 成功、失败
+ */
+export function addOffice(office) {
+  return request({
+    url: version + '/office',
+    method: 'post',
+    data: office
+  })
+}
+
+/**
+ * 修改机构/部门
+ * @param office 机构/部门
+ * @returns {AxiosPromise} 成功、失败
+ */
+export function updateOffice(office) {
+  return request({
+    url: version + '/office',
+    method: 'put',
+    data: office
+  })
+}
+
+/**
+ * 删除机构/部门
+ * @param officeId 机构/部门ID
+ * @returns {AxiosPromise} 成功、失败
+ */
+export function deleteOffice(officeId) {
+  return request({
+    url: version + '/office/' + officeId,
+    method: 'delete'
+  })
+}
+/**
+ * 查询机构/部门详情
+ * @param officeId 机构/部门ID
+ * @returns {AxiosPromise} 成功、失败
+ */
+export function getOfficeInfo(officeId) {
+  return request({
+    url: version + '/office/' + officeId,
+    method: 'get'
+  })
+}
+/**
+ * 分页查询机构/部门列表
+ * @param data 分页信息
+ * @returns {AxiosPromise} 机构/部门列表
+ */
+export function getOffices(data) {
+  return request({
+    url: version + '/offices',
+    method: 'get',
+    params: data
+  })
+}
+
+/**
+ * 批量删除机构/部门
+ * @param officeIds 机构/部门ID集合
+ * @returns {AxiosPromise} 成功、失败
+ */
+export function deleteOffices(officeIds) {
+  return request({
+    url: version + '/offices',
+    method: 'delete',
+    data: officeIds
+  })
+}

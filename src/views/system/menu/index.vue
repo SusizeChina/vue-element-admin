@@ -56,9 +56,9 @@
       <el-table-column prop="component" label="组件路径" :show-overflow-tooltip="true" />
       <el-table-column prop="status" label="状态" :formatter="statusFormat" width="80" />
       <el-table-column label="创建时间" align="center" prop="createTime">
-        <template slot-scope="scope">
+        <!--        <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
-        </template>
+        </template>-->
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -207,7 +207,8 @@
 </template>
 
 <script>
-import { listMenu, getMenu, delMenu, addMenu, updateMenu } from '@/api/system/menu'
+import { getTreeMenu, getTreeAction, addMenu, updateMenu, deleteMenu, getMenuInfo, getMenus, getALLMenus, deleteMenus } from '@/api/system/menu'
+import { handleTree } from '@/utils/common'
 import Treeselect from '@riophae/vue-treeselect'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 import IconSelect from '@/components/IconSelect'
@@ -271,8 +272,8 @@ export default {
     /** 查询菜单列表 */
     getList() {
       this.loading = true
-      listMenu(this.queryParams).then(response => {
-        this.menuList = this.handleTree(response.data, 'menuId')
+      getALLMenus(this.queryParams).then(response => {
+        this.menuList = handleTree(response.data, 'menuId')
         this.loading = false
       })
     },
@@ -289,10 +290,10 @@ export default {
     },
     /** 查询菜单下拉树结构 */
     getTreeselect() {
-      listMenu().then(response => {
+      getALLMenus().then(response => {
         this.menuOptions = []
         const menu = { menuId: 0, menuName: '主类目', children: [] }
-        menu.children = this.handleTree(response.data, 'menuId')
+        menu.children = handleTree(response.data, 'menuId')
         this.menuOptions.push(menu)
       })
     },
@@ -301,14 +302,16 @@ export default {
       if (row.menuType === 'F') {
         return ''
       }
-      return this.selectDictLabel(this.visibleOptions, row.visible)
+      return '按钮'
+      // return this.selectDictLabel(this.visibleOptions, row.visible)
     },
     // 菜单状态字典翻译
     statusFormat(row, column) {
       if (row.menuType === 'F') {
         return ''
       }
-      return this.selectDictLabel(this.statusOptions, row.status)
+      return '按钮'
+      // return this.selectDictLabel(this.statusOptions, row.status)
     },
     // 取消按钮
     cancel() {
@@ -356,7 +359,7 @@ export default {
     handleUpdate(row) {
       this.reset()
       this.getTreeselect()
-      getMenu(row.menuId).then(response => {
+      getMenuInfo(row.menuId).then(response => {
         this.form = response.data
         this.open = true
         this.title = '修改菜单'
@@ -393,7 +396,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(function() {
-        return delMenu(row.menuId)
+        return deleteMenu(row.menuId)
       }).then(() => {
         this.getList()
         this.msgSuccess('删除成功')

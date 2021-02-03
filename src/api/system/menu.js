@@ -1,60 +1,109 @@
 import request from '@/utils/request'
-
-// 查询菜单树形菜单
-export function getTreeMenu(query) {
+import { version } from '@/utils/common'
+/**
+ * 查询用户菜单，返回树形结构,不带功能按钮
+ * @returns {AxiosPromise} 树形结构菜单，不带功能按钮
+ */
+export function getTreeMenu() {
   return request({
-    url: '/v1/spaceship/menu/tree',
-    method: 'get',
-    params: query
-  })
-}
-
-// 查询菜单详细
-export function getMenu(menuId) {
-  return request({
-    url: '/system/menu/' + menuId,
+    url: version + '/menu/tree',
     method: 'get'
   })
 }
 
-// 查询菜单下拉树结构
-export function treeselect() {
+/**
+ * 查询用户菜单，返回树形结构,带功能按钮
+ * @returns {AxiosPromise} 树形结构菜单，带功能按钮
+ */
+export function getTreeAction() {
   return request({
-    url: '/system/menu/treeselect',
+    url: version + '/action/tree',
     method: 'get'
   })
 }
-
-// 根据角色ID查询菜单下拉树结构
-export function roleMenuTreeselect(roleId) {
+/**
+ * 新增菜单
+ * @param menu 菜单
+ * @returns {AxiosPromise} 成功、失败
+ */
+export function addMenu(menu) {
   return request({
-    url: '/system/menu/roleMenuTreeselect/' + roleId,
-    method: 'get'
-  })
-}
-
-// 新增菜单
-export function addMenu(data) {
-  return request({
-    url: '/system/menu',
+    url: version + '/menu',
     method: 'post',
-    data: data
+    data: menu
   })
 }
 
-// 修改菜单
-export function updateMenu(data) {
+/**
+ * 修改菜单
+ * @param menu 菜单
+ * @returns {AxiosPromise} 成功、失败
+ */
+export function updateMenu(menu) {
   return request({
-    url: '/system/menu',
+    url: version + '/menu',
     method: 'put',
-    data: data
+    data: menu
   })
 }
 
-// 删除菜单
-export function delMenu(menuId) {
+/**
+ * 删除菜单
+ * @param menuId 菜单ID
+ * @returns {AxiosPromise} 成功、失败
+ */
+export function deleteMenu(menuId) {
   return request({
-    url: '/system/menu/' + menuId,
+    url: version + '/menu/' + menuId,
     method: 'delete'
+  })
+}
+/**
+ * 查询菜单详情
+ * @param menuId 菜单ID
+ * @returns {AxiosPromise} 成功、失败
+ */
+export function getMenuInfo(menuId) {
+  return request({
+    url: version + '/menu/' + menuId,
+    method: 'get'
+  })
+}
+/**
+ * 分页查询菜单列表
+ * @param data 分页信息
+ * @returns {AxiosPromise} 菜单列表
+ */
+export function getMenus(data) {
+  return request({
+    url: version + '/menus',
+    method: 'get',
+    params: data
+  })
+}
+
+/**
+ * 查询所有菜单列表
+ * @param menu 菜单信息
+ * @returns {AxiosPromise} 菜单列表
+ */
+export function getALLMenus(menu) {
+  return request({
+    url: version + '/all/menu',
+    method: 'get',
+    params: menu
+  })
+}
+
+/**
+ * 批量删除菜单
+ * @param menuIds 菜单ID集合
+ * @returns {AxiosPromise} 成功、失败
+ */
+export function deleteMenus(menuIds) {
+  return request({
+    url: version + '/menus',
+    method: 'delete',
+    data: menuIds
   })
 }

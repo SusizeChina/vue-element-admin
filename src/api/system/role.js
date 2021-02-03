@@ -1,75 +1,88 @@
 import request from '@/utils/request'
+import { version } from '@/utils/common'
 
-// 查询角色列表
-export function listRole(query) {
+/**
+ * 新增角色
+ * @param role 角色
+ * @returns {AxiosPromise} 成功、失败
+ */
+export function addRole(role) {
   return request({
-    url: '/system/role/list',
-    method: 'get',
-    params: query
-  })
-}
-
-// 查询角色详细
-export function getRole(roleId) {
-  return request({
-    url: '/system/role/' + roleId,
-    method: 'get'
-  })
-}
-
-// 新增角色
-export function addRole(data) {
-  return request({
-    url: '/system/role',
+    url: version + '/role',
     method: 'post',
-    data: data
+    data: role
   })
 }
 
-// 修改角色
-export function updateRole(data) {
+/**
+ * 修改角色
+ * @param role 角色
+ * @returns {AxiosPromise} 成功、失败
+ */
+export function updateRole(role) {
   return request({
-    url: '/system/role',
+    url: version + '/role',
     method: 'put',
-    data: data
+    data: role
   })
 }
 
-// 角色数据权限
-export function dataScope(data) {
+/**
+ * 删除角色
+ * @param roleId 角色ID
+ * @returns {AxiosPromise} 成功、失败
+ */
+export function deleteRole(roleId) {
   return request({
-    url: '/system/role/dataScope',
-    method: 'put',
-    data: data
-  })
-}
-
-// 角色状态修改
-export function changeRoleStatus(roleId, status) {
-  const data = {
-    roleId,
-    status
-  }
-  return request({
-    url: '/system/role/changeStatus',
-    method: 'put',
-    data: data
-  })
-}
-
-// 删除角色
-export function delRole(roleId) {
-  return request({
-    url: '/system/role/' + roleId,
+    url: version + '/role/' + roleId,
     method: 'delete'
   })
 }
-
-// 导出角色
-export function exportRole(query) {
+/**
+ * 查询角色详情
+ * @param roleId 角色ID
+ * @returns {AxiosPromise} 成功、失败
+ */
+export function getRoleInfo(roleId) {
   return request({
-    url: '/system/role/export',
+    url: version + '/role/' + roleId,
+    method: 'get'
+  })
+}
+/**
+ * 分页查询角色列表
+ * @param data 分页信息
+ * @returns {AxiosPromise} 角色列表
+ */
+export function getRoles(data) {
+  return request({
+    url: version + '/roles',
     method: 'get',
-    params: query
+    params: data
+  })
+}
+/**
+ * 查询所有角色列表
+ * @param data 角色信息
+ * @returns {AxiosPromise} 角色列表
+ */
+export function getAllRoles(role) {
+  return request({
+    url: version + '/all/role',
+    method: 'get',
+    params: role
+  })
+}
+
+/**
+ * 批量删除角色
+ * @param roleIds 角色ID集合
+ * @returns {AxiosPromise} 成功、失败
+ */
+export function deleteRoles(roleIds) {
+  return request({
+    url: version + '/roles',
+    method: 'delete',
+    data: roleIds
   })
 }
