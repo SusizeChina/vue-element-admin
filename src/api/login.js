@@ -1,16 +1,15 @@
 import request from '@/utils/request'
-import { version } from '@/utils/common'
 export function login(data) {
   return request({
-    url: version + '/user/login',
+    url: '/user/login',
     method: 'post',
-    data
+    data: data
   })
 }
 
 export function logout() {
   return request({
-    url: version + '/user/logout',
+    url: '/user/logout',
     method: 'post'
   })
 }

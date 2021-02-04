@@ -1,12 +1,11 @@
 import request from '@/utils/request'
-import { version } from '@/utils/common'
 /**
  * 查询机构/部门，返回树形结构
  * @returns {AxiosPromise} 树形结构机构/部门
  */
 export function getTreeOffice() {
   return request({
-    url: version + '/office/tree',
+    url: '/office/tree',
     method: 'get'
   })
 }
@@ -18,7 +17,7 @@ export function getTreeOffice() {
  */
 export function addOffice(office) {
   return request({
-    url: version + '/office',
+    url: '/office',
     method: 'post',
     data: office
   })
@@ -31,7 +30,7 @@ export function addOffice(office) {
  */
 export function updateOffice(office) {
   return request({
-    url: version + '/office',
+    url: '/office',
     method: 'put',
     data: office
   })
@@ -44,7 +43,7 @@ export function updateOffice(office) {
  */
 export function deleteOffice(officeId) {
   return request({
-    url: version + '/office/' + officeId,
+    url: '/office/' + officeId,
     method: 'delete'
   })
 }
@@ -55,7 +54,7 @@ export function deleteOffice(officeId) {
  */
 export function getOfficeInfo(officeId) {
   return request({
-    url: version + '/office/' + officeId,
+    url: '/office/' + officeId,
     method: 'get'
   })
 }
@@ -66,7 +65,7 @@ export function getOfficeInfo(officeId) {
  */
 export function getOffices(data) {
   return request({
-    url: version + '/offices',
+    url: '/offices',
     method: 'get',
     params: data
   })
@@ -79,7 +78,7 @@ export function getOffices(data) {
  */
 export function deleteOffices(officeIds) {
   return request({
-    url: version + '/offices',
+    url: '/offices',
     method: 'delete',
     data: officeIds
   })

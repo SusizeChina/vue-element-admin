@@ -1,5 +1,4 @@
 import request from '@/utils/request'
-import { version } from '@/utils/common'
 
 /**
  * 新增角色
@@ -8,7 +7,7 @@ import { version } from '@/utils/common'
  */
 export function addRole(role) {
   return request({
-    url: version + '/role',
+    url: '/role',
     method: 'post',
     data: role
   })
@@ -21,7 +20,7 @@ export function addRole(role) {
  */
 export function updateRole(role) {
   return request({
-    url: version + '/role',
+    url: '/role',
     method: 'put',
     data: role
   })
@@ -34,7 +33,7 @@ export function updateRole(role) {
  */
 export function deleteRole(roleId) {
   return request({
-    url: version + '/role/' + roleId,
+    url: '/role/' + roleId,
     method: 'delete'
   })
 }
@@ -45,7 +44,7 @@ export function deleteRole(roleId) {
  */
 export function getRoleInfo(roleId) {
   return request({
-    url: version + '/role/' + roleId,
+    url: '/role/' + roleId,
     method: 'get'
   })
 }
@@ -56,7 +55,7 @@ export function getRoleInfo(roleId) {
  */
 export function getRoles(data) {
   return request({
-    url: version + '/roles',
+    url: '/roles',
     method: 'get',
     params: data
   })
@@ -68,7 +67,7 @@ export function getRoles(data) {
  */
 export function getAllRoles(role) {
   return request({
-    url: version + '/all/role',
+    url: '/all/role',
     method: 'get',
     params: role
   })
@@ -81,7 +80,7 @@ export function getAllRoles(role) {
  */
 export function deleteRoles(roleIds) {
   return request({
-    url: version + '/roles',
+    url: '/roles',
     method: 'delete',
     data: roleIds
   })

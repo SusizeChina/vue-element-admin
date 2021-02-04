@@ -1,5 +1,4 @@
 import request from '@/utils/request'
-import { version } from '@/utils/common'
 
 /**
  * 查询登录用户信息
@@ -7,7 +6,7 @@ import { version } from '@/utils/common'
  */
 export function getLoginUserInfo(user) {
   return request({
-    url: version + '/user/info',
+    url: '/user/info',
     method: 'get'
   })
 }
@@ -19,7 +18,7 @@ export function getLoginUserInfo(user) {
  */
 export function addUser(user) {
   return request({
-    url: version + '/user',
+    url: '/user',
     method: 'post',
     data: user
   })
@@ -32,7 +31,7 @@ export function addUser(user) {
  */
 export function updateUser(user) {
   return request({
-    url: version + '/user',
+    url: '/user',
     method: 'put',
     data: user
   })
@@ -45,7 +44,7 @@ export function updateUser(user) {
  */
 export function deleteUser(userId) {
   return request({
-    url: version + '/user/' + userId,
+    url: '/user/' + userId,
     method: 'delete'
   })
 }
@@ -56,7 +55,7 @@ export function deleteUser(userId) {
  */
 export function getUserInfo(userId) {
   return request({
-    url: version + '/user/' + userId,
+    url: '/user/' + userId,
     method: 'get'
   })
 }
@@ -67,7 +66,7 @@ export function getUserInfo(userId) {
  */
 export function getUsers(data) {
   return request({
-    url: version + '/users',
+    url: '/users',
     method: 'get',
     params: data
   })
@@ -80,7 +79,7 @@ export function getUsers(data) {
  */
 export function deleteUsers(userIds) {
   return request({
-    url: version + '/users',
+    url: '/users',
     method: 'delete',
     data: userIds
   })

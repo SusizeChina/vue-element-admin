@@ -1,12 +1,11 @@
 import request from '@/utils/request'
-import { version } from '@/utils/common'
 /**
  * 查询用户字典，返回树形结构
  * @returns {AxiosPromise} 树形结构字典
  */
 export function getTreeDict() {
   return request({
-    url: version + '/dict/tree',
+    url: '/dict/tree',
     method: 'get'
   })
 }
@@ -18,7 +17,7 @@ export function getTreeDict() {
  */
 export function addDict(dict) {
   return request({
-    url: version + '/dict',
+    url: '/dict',
     method: 'post',
     data: dict
   })
@@ -31,7 +30,7 @@ export function addDict(dict) {
  */
 export function updateDict(dict) {
   return request({
-    url: version + '/dict',
+    url: '/dict',
     method: 'put',
     data: dict
   })
@@ -44,7 +43,7 @@ export function updateDict(dict) {
  */
 export function deleteDict(dictId) {
   return request({
-    url: version + '/dict/' + dictId,
+    url: '/dict/' + dictId,
     method: 'delete'
   })
 }
@@ -55,7 +54,7 @@ export function deleteDict(dictId) {
  */
 export function getDictInfo(dictId) {
   return request({
-    url: version + '/dict/' + dictId,
+    url: '/dict/' + dictId,
     method: 'get'
   })
 }
@@ -66,7 +65,7 @@ export function getDictInfo(dictId) {
  */
 export function getDicts(data) {
   return request({
-    url: version + '/dicts',
+    url: '/dicts',
     method: 'get',
     params: data
   })
@@ -79,8 +78,20 @@ export function getDicts(data) {
  */
 export function deleteDicts(dictIds) {
   return request({
-    url: version + '/dicts',
+    url: '/dicts',
     method: 'delete',
     data: dictIds
+  })
+}
+
+/**
+ * 查询指定字典类型参数
+ * @param type 字典类型
+ * @returns {AxiosPromise} 字典参数列表
+ */
+export function getDictTypes(type) {
+  return request({
+    url: '/dict_type?type=' + type,
+    method: 'get'
   })
 }

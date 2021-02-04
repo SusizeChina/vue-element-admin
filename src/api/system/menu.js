@@ -1,12 +1,11 @@
 import request from '@/utils/request'
-import { version } from '@/utils/common'
 /**
  * 查询用户菜单，返回树形结构,不带功能按钮
  * @returns {AxiosPromise} 树形结构菜单，不带功能按钮
  */
 export function getTreeMenu() {
   return request({
-    url: version + '/menu/tree',
+    url: '/menu/tree',
     method: 'get'
   })
 }
@@ -17,7 +16,7 @@ export function getTreeMenu() {
  */
 export function getTreeAction() {
   return request({
-    url: version + '/action/tree',
+    url: '/action/tree',
     method: 'get'
   })
 }
@@ -28,7 +27,7 @@ export function getTreeAction() {
  */
 export function addMenu(menu) {
   return request({
-    url: version + '/menu',
+    url: '/menu',
     method: 'post',
     data: menu
   })
@@ -41,7 +40,7 @@ export function addMenu(menu) {
  */
 export function updateMenu(menu) {
   return request({
-    url: version + '/menu',
+    url: '/menu',
     method: 'put',
     data: menu
   })
@@ -54,7 +53,7 @@ export function updateMenu(menu) {
  */
 export function deleteMenu(menuId) {
   return request({
-    url: version + '/menu/' + menuId,
+    url: '/menu/' + menuId,
     method: 'delete'
   })
 }
@@ -65,7 +64,7 @@ export function deleteMenu(menuId) {
  */
 export function getMenuInfo(menuId) {
   return request({
-    url: version + '/menu/' + menuId,
+    url: '/menu/' + menuId,
     method: 'get'
   })
 }
@@ -76,7 +75,7 @@ export function getMenuInfo(menuId) {
  */
 export function getMenus(data) {
   return request({
-    url: version + '/menus',
+    url: '/menus',
     method: 'get',
     params: data
   })
@@ -89,7 +88,7 @@ export function getMenus(data) {
  */
 export function getALLMenus(menu) {
   return request({
-    url: version + '/all/menu',
+    url: '/menu_all',
     method: 'get',
     params: menu
   })
@@ -102,7 +101,7 @@ export function getALLMenus(menu) {
  */
 export function deleteMenus(menuIds) {
   return request({
-    url: version + '/menus',
+    url: '/menus',
     method: 'delete',
     data: menuIds
   })

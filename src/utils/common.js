@@ -1,7 +1,6 @@
 ﻿/**
  * 通用js方法封装处理
  */
-export const version = '/v1/spaceship'
 
 const baseURL = process.env.VUE_APP_BASE_API
 
@@ -58,7 +57,7 @@ export function addDateRange(params, dateRange) {
   var search = params
   search.beginTime = ''
   search.endTime = ''
-  if (dateRange != null && dateRange != '') {
+  if (dateRange != null && dateRange !== '') {
     search.beginTime = this.dateRange[0]
     search.endTime = this.dateRange[1]
   }
@@ -69,8 +68,8 @@ export function addDateRange(params, dateRange) {
 export function selectDictLabel(datas, value) {
   var actions = []
   Object.keys(datas).some((key) => {
-    if (datas[key].dictValue == ('' + value)) {
-      actions.push(datas[key].dictLabel)
+    if (datas[key].value === ('' + value)) {
+      actions.push(datas[key].label)
       return true
     }
   })

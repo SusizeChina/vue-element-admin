@@ -9,7 +9,7 @@ function checkPermission(el, binding) {
       const permission = value
 
       const hasPermission = permissions.some(perm => {
-        return permission.includes(permission)
+        return permission.includes(perm)
       })
 
       if (!hasPermission) {
