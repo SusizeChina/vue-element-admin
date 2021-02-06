@@ -24,7 +24,7 @@ import Pagination from '@/components/Pagination'
 import { getConfigKey } from '@/api/system/config'
 import { resetForm, addDateRange, selectDictLabel, selectDictLabels, download, handleTree } from '@/utils/common'
 import { parseTime, formatDate, formatTime } from '@/utils/index'
-import { getDictTypes } from '@/api/system/dict/data'
+import { getDictTypes } from '@/api/system/dict'
 
 import { SYS_USER_SEX, SYS_USER_STATUS, SYS_ROLE_STATUS, SYS_OFFICE_STATUS, SYS_DICT_STATUS, SYS_MENU_TYPE, SYS_SHOW_HIDE, STATUS } from '@/utils/constant'
 // 全局方法挂载

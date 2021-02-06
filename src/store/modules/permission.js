@@ -93,11 +93,12 @@ function formatRouter(asyncRouterMap) {
   asyncRouterMap.filter(menu => {
     const route = {}
     route.name = getRouterName(menu.path)
-    route.hidden = menu.visible !== '0'
+    route.hidden = menu.visible === '1'
 
     const meta = {}
     meta.title = menu.menuName
     meta.icon = menu.icon
+    meta.noCache = menu.isCache === 1
 
     const roles = []
     roles.push(menu.perms)

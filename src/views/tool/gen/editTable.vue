@@ -125,7 +125,7 @@
 </template>
 <script>
 import { getGenTable, updateGenTable } from '@/api/tool/gen'
-import { optionselect as getDictOptionselect } from '@/api/system/dict/type'
+import { optionselect as getDictOptionselect } from '@/api/system/dict'
 import { listMenu as getMenuTreeselect } from '@/api/system/menu'
 import basicInfoForm from './basicInfoForm'
 import genInfoForm from './genInfoForm'

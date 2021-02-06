@@ -113,10 +113,10 @@ export default {
     }
   },
   created() {
-    this.getList()
     this.getDictTypes(this.STATUS).then(response => {
       this.statusOptions = response.data
     })
+    this.getList()
   },
   methods: {
     handleMenuInfo(row) {

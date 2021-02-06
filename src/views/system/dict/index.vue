@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form v-show="showSearch" ref="queryForm" :model="listQuery" :inline="true" label-width="68px">
+    <el-form v-show="showSearch" ref="listForm" :model="listQuery" :inline="true" label-width="68px">
       <el-form-item label="字典名称" prop="label">
         <el-input
           v-model="listQuery.label"
@@ -11,10 +11,10 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="字典类型" prop="type">
+      <el-form-item label="字典编号" prop="value">
         <el-input
-          v-model="listQuery.type"
-          placeholder="请输入字典类型"
+          v-model="listQuery.value"
+          placeholder="字典编号"
           clearable
           size="small"
           style="width: 240px"
@@ -31,9 +31,9 @@
         >
           <el-option
             v-for="dict in statusOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
           />
         </el-select>
       </el-form-item>
@@ -62,7 +62,7 @@
           type="primary"
           icon="el-icon-plus"
           size="mini"
-          @click="handleAdd"
+          @click="handleDictInfo"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -72,7 +72,7 @@
           icon="el-icon-edit"
           size="mini"
           :disabled="single"
-          @click="handleUpdate"
+          @click="handleDictInfo(this.ids)"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -108,11 +108,11 @@
 
     <el-table v-loading="loading" :data="typeList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="字典编号" align="center" prop="id" />
+      <el-table-column label="字典编号" type="index" align="center" />
       <el-table-column label="字典名称" align="center" prop="label" :show-overflow-tooltip="true" />
-      <el-table-column label="字典类型" align="center" :show-overflow-tooltip="true">
+      <el-table-column label="字典编号" align="center" :show-overflow-tooltip="true">
         <template slot-scope="scope">
-          <router-link :to="'/dict/type/data/' + scope.row.id" class="link-type">
+          <router-link :to="{name:'DictData',params:{id:scope.row.id}}" class="link-type">
             <span>{{ scope.row.value }}</span>
           </router-link>
         </template>
@@ -131,7 +131,7 @@
             size="mini"
             type="text"
             icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
+            @click="handleDictInfo(scope.row)"
           >修改</el-button>
           <el-button
             v-permission="['system:dict:remove']"
@@ -146,83 +146,35 @@
 
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
 
-    <!-- 添加或修改参数配置对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="字典名称" prop="label">
-          <el-input v-model="form.label" placeholder="请输入字典名称" />
-        </el-form-item>
-        <el-form-item label="字典类型" prop="type">
-          <el-input v-model="form.type" placeholder="请输入字典类型" />
-        </el-form-item>
-        <el-form-item label="状态" prop="delFlag">
-          <el-radio-group v-model="form.delFlag">
-            <el-radio
-              v-for="dict in statusOptions"
-              :key="dict.value"
-              :label="dict.value"
-            >{{ dict.label }}</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="备注" prop="remarks">
-          <el-input v-model="form.remarks" type="textarea" placeholder="请输入内容" />
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
-      </div>
-    </el-dialog>
+    <!-- 添加或修改字典对话框 -->
+    <dict-info ref="dictInfo" @refreshDataList="getList" />
   </div>
 </template>
 
 <script>
-import { getTreeDict, addDict, updateDict, getDictInfo, getDicts, deleteDicts } from '@/api/system/dict/data'
+import { getTreeDict, getDicts, deleteDicts } from '@/api/system/dict'
+import DictInfo from './dict-info'
 
 export default {
   name: 'Dict',
+  components: { DictInfo },
   data() {
     return {
-      // 遮罩层
       loading: true,
-      // 选中数组
       ids: [],
-      // 非单个禁用
       single: true,
-      // 非多个禁用
       multiple: true,
-      // 显示搜索条件
       showSearch: true,
-      // 总条数
       total: 0,
-      // 字典表格数据
       typeList: [],
-      // 弹出层标题
-      title: '',
-      // 是否显示弹出层
-      open: false,
-      // 状态数据字典
       statusOptions: [],
-      // 日期范围
       dateRange: [],
-      // 查询参数
       listQuery: {
         pageNum: 1,
         pageSize: 10,
         label: undefined,
         type: undefined,
         delFlag: undefined
-      },
-      // 表单参数
-      form: {},
-      // 表单校验
-      rules: {
-        label: [
-          { required: true, message: '字典名称不能为空', trigger: 'blur' }
-        ],
-        type: [
-          { required: true, message: '字典类型不能为空', trigger: 'blur' }
-        ]
       }
     }
   },
@@ -235,6 +187,11 @@ export default {
     this.getList()
   },
   methods: {
+    handleDictInfo(row) {
+      this.$nextTick(() => {
+        this.$refs.dictInfo.init(row)
+      })
+    },
     getList() {
       this.loading = true
       // 只查询字典项
@@ -249,70 +206,19 @@ export default {
     statusFormat(row, column) {
       return this.selectDictLabel(this.statusOptions, row.delFlag)
     },
-    cancel() {
-      this.open = false
-      this.reset()
-    },
-    reset() {
-      this.form = {
-        id: undefined,
-        label: undefined,
-        type: undefined,
-        delFlag: '0',
-        remarks: undefined
-      }
-      this.resetForm('form')
-    },
     handleQuery() {
       this.listQuery.pageNum = 1
       this.getList()
     },
     resetQuery() {
       this.dateRange = []
-      this.resetForm('queryForm')
+      this.resetForm('listForm')
       this.handleQuery()
-    },
-    handleAdd() {
-      this.reset()
-      this.open = true
-      this.title = '添加字典类型'
     },
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.id)
       this.single = selection.length !== 1
       this.multiple = !selection.length
-    },
-    handleUpdate(row) {
-      this.reset()
-      const id = row.id || this.ids
-      getDictInfo(id).then(response => {
-        this.form = response.data
-        this.open = true
-        this.title = '修改字典类型'
-      })
-    },
-    submitForm: function() {
-      this.$refs['form'].validate(valid => {
-        if (valid) {
-          if (this.form.id !== undefined) {
-            updateDict(this.form).then(response => {
-              if (response.code === 200) {
-                this.msgSuccess('修改成功')
-                this.open = false
-                this.getList()
-              }
-            })
-          } else {
-            addDict(this.form).then(response => {
-              if (response.code === 200) {
-                this.msgSuccess('新增成功')
-                this.open = false
-                this.getList()
-              }
-            })
-          }
-        }
-      })
     },
     handleDelete(row) {
       const ids = row.id || this.ids
