@@ -1,19 +1,19 @@
 <template>
   <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
     <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-      <el-form-item label="字典名称" prop="label">
-        <el-input v-model="form.label" placeholder="请输入字典名称" />
+      <el-form-item label="字典名称" prop="dictLabel">
+        <el-input v-model="form.dictLabel" placeholder="请输入字典名称" />
       </el-form-item>
-      <el-form-item label="字典类型" prop="type">
-        <el-input v-model="form.type" placeholder="请输入字典类型" />
+      <el-form-item label="字典类型" prop="dictType">
+        <el-input v-model="form.dictType" placeholder="请输入字典类型" />
       </el-form-item>
-      <el-form-item label="状态" prop="delFlag">
-        <el-radio-group v-model="form.delFlag">
+      <el-form-item label="状态" prop="status">
+        <el-radio-group v-model="form.status">
           <el-radio
             v-for="dict in statusOptions"
-            :key="dict.value"
-            :label="dict.value"
-          >{{ dict.label }}
+            :key="dict.dictValue"
+            :label="dict.dictValue"
+          >{{ dict.dictLabel }}
           </el-radio>
         </el-radio-group>
       </el-form-item>
@@ -39,10 +39,10 @@ export default {
       statusOptions: [],
       form: {},
       rules: {
-        label: [
+        dictLabel: [
           { required: true, message: '字典名称不能为空', trigger: 'blur' }
         ],
-        type: [
+        dictType: [
           { required: true, message: '字典类型不能为空', trigger: 'blur' }
         ]
       }
@@ -56,7 +56,7 @@ export default {
   },
   methods: {
     init(row) {
-      if (row.id) {
+      if (row.dictId) {
         this.handleUpdate(row)
       } else {
         this.handleAdd(row)
@@ -68,10 +68,10 @@ export default {
     },
     reset() {
       this.form = {
-        id: undefined,
-        label: undefined,
-        type: undefined,
-        delFlag: '0',
+        dictId: undefined,
+        dictLabel: undefined,
+        dictType: undefined,
+        status: '0',
         remarks: undefined
       }
       this.resetForm('form')
@@ -83,8 +83,8 @@ export default {
     },
     handleUpdate(row) {
       this.reset()
-      const id = row.id
-      getDictInfo(id).then(response => {
+      const dictId = row.dictId
+      getDictInfo(dictId).then(response => {
         this.form = response.data
         this.open = true
         this.title = '修改字典类型'
@@ -93,7 +93,7 @@ export default {
     submitForm: function() {
       this.$refs['form'].validate(valid => {
         if (valid) {
-          if (this.form.id !== undefined) {
+          if (this.form.dictId !== undefined) {
             updateDict(this.form).then(data => {
               this.$message({
                 message: '操作成功',

@@ -51,14 +51,14 @@
         </el-col>
         <el-col :span="12">
           <el-form-item label="显示排序" prop="orderNum">
-            <el-input-number v-model="form.orderNum" controls-position="right" :min="0" />
+            <el-input-number v-model="form.sort" controls-position="right" :min="0" />
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item v-if="form.menuType != 'F'" label="是否外链">
             <el-radio-group v-model="form.isFrame">
-              <el-radio :label="0">是</el-radio>
-              <el-radio :label="1">否</el-radio>
+              <el-radio :label="'0'">是</el-radio>
+              <el-radio :label="'1'">否</el-radio>
             </el-radio-group>
           </el-form-item>
         </el-col>
@@ -82,9 +82,9 @@
             <el-radio-group v-model="form.visible">
               <el-radio
                 v-for="dict in visibleOptions"
-                :key="dict.value"
-                :label="dict.value"
-              >{{ dict.label }}
+                :key="dict.dictValue"
+                :label="dict.dictValue"
+              >{{ dict.dictLabel }}
               </el-radio>
             </el-radio-group>
           </el-form-item>
@@ -94,9 +94,9 @@
             <el-radio-group v-model="form.status">
               <el-radio
                 v-for="dict in statusOptions"
-                :key="dict.value"
-                :label="dict.value"
-              >{{ dict.label }}
+                :key="dict.dictValue"
+                :label="dict.dictValue"
+              >{{ dict.dictLabel }}
               </el-radio>
             </el-radio-group>
           </el-form-item>
@@ -104,8 +104,8 @@
         <el-col :span="12">
           <el-form-item v-if="form.menuType == 'C'" label="是否缓存">
             <el-radio-group v-model="form.isCache">
-              <el-radio :label="0">缓存</el-radio>
-              <el-radio :label="1">不缓存</el-radio>
+              <el-radio :label="'0'">缓存</el-radio>
+              <el-radio :label="'1'">不缓存</el-radio>
             </el-radio-group>
           </el-form-item>
         </el-col>
@@ -139,7 +139,7 @@ export default {
         menuName: [
           { required: true, message: '菜单名称不能为空', trigger: 'blur' }
         ],
-        orderNum: [
+        sort: [
           { required: true, message: '菜单顺序不能为空', trigger: 'blur' }
         ],
         path: [
@@ -180,8 +180,8 @@ export default {
     getTreeSelect() {
       getALLMenus().then(response => {
         this.menuOptions = []
-        const menu = { menuId: 0, menuName: '主类目', children: [] }
-        menu.children = this.handleTree(response.data, 'menuId')
+        const menu = { menuId: '0', menuName: '主类目', children: [] }
+        menu.children = this.handleTree(response.data, 'menuId', 'parentId', 'children', '0')
         this.menuOptions.push(menu)
       })
     },
@@ -192,7 +192,7 @@ export default {
     reset() {
       this.form = {
         menuId: undefined,
-        parentId: 0,
+        parentId: '0',
         menuName: undefined,
         icon: undefined,
         menuType: 'M',
@@ -211,7 +211,7 @@ export default {
       if (row != null && row.menuId) {
         this.form.parentId = row.menuId
       } else {
-        this.form.parentId = 0
+        this.form.parentId = '0'
       }
       this.open = true
       this.title = '添加菜单'

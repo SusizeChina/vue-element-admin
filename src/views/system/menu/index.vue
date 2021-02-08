@@ -14,9 +14,9 @@
         <el-select v-model="listQuery.status" placeholder="菜单状态" clearable size="small">
           <el-option
             v-for="dict in statusOptions"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
           />
         </el-select>
       </el-form-item>
@@ -52,13 +52,13 @@
           <svg-icon :icon-class="scope.row.icon" />
         </template>
       </el-table-column>
-      <el-table-column prop="orderNum" label="排序" width="60" />
+      <el-table-column prop="sort" label="排序" width="60" />
       <el-table-column prop="perms" label="权限标识" :show-overflow-tooltip="true" />
       <el-table-column prop="component" label="组件路径" :show-overflow-tooltip="true" />
       <el-table-column prop="status" label="状态" :formatter="statusFormat" width="80" />
       <el-table-column label="创建时间" align="center" prop="createTime">
         <template slot-scope="scope">
-          <span>{{ scope.row.createTime }}</span>
+          <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -135,7 +135,7 @@ export default {
     getList() {
       this.loading = true
       getALLMenus(this.listQuery).then(response => {
-        this.menuList = this.handleTree(response.data, 'menuId')
+        this.menuList = this.handleTree(response.data, 'menuId', 'parentId', 'children', '0')
         this.loading = false
       })
     },

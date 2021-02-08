@@ -1,9 +1,9 @@
 <template>
   <div class="app-container">
     <el-form v-show="showSearch" ref="listForm" :model="listQuery" :inline="true" label-width="68px">
-      <el-form-item label="字典名称" prop="label">
+      <el-form-item label="字典名称" prop="dictLabel">
         <el-input
-          v-model="listQuery.label"
+          v-model="listQuery.dictLabel"
           placeholder="请输入字典名称"
           clearable
           size="small"
@@ -11,9 +11,9 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="字典编号" prop="value">
+      <el-form-item label="字典编号" prop="dictValue">
         <el-input
-          v-model="listQuery.value"
+          v-model="listQuery.dictValue"
           placeholder="字典编号"
           clearable
           size="small"
@@ -21,9 +21,9 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="状态" prop="delFlag">
+      <el-form-item label="状态" prop="status">
         <el-select
-          v-model="listQuery.delFlag"
+          v-model="listQuery.status"
           placeholder="字典状态"
           clearable
           size="small"
@@ -31,9 +31,9 @@
         >
           <el-option
             v-for="dict in statusOptions"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
           />
         </el-select>
       </el-form-item>
@@ -73,7 +73,7 @@
           icon="el-icon-edit"
           size="mini"
           :disabled="single"
-          @click="handleDictInfo(this.ids)"
+          @click="handleDictInfo(this.dictIds)"
         >修改
         </el-button>
       </el-col>
@@ -114,19 +114,19 @@
     <el-table v-loading="loading" :data="typeList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="字典编号" type="index" align="center" />
-      <el-table-column label="字典名称" align="center" prop="label" :show-overflow-tooltip="true" />
+      <el-table-column label="字典名称" align="center" prop="dictLabel" :show-overflow-tooltip="true" />
       <el-table-column label="字典编号" align="center" :show-overflow-tooltip="true">
         <template slot-scope="scope">
-          <router-link :to="{name:'DictData',params:{id:scope.row.id}}" class="link-type">
-            <span>{{ scope.row.value }}</span>
+          <router-link :to="{name:'DictData',params:{dictId:scope.row.dictId}}" class="link-type">
+            <span>{{ scope.row.dictValue }}</span>
           </router-link>
         </template>
       </el-table-column>
-      <el-table-column label="状态" align="center" prop="delFlag" :formatter="statusFormat" />
+      <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat" />
       <el-table-column label="备注" align="center" prop="remarks" :show-overflow-tooltip="true" />
-      <el-table-column label="创建时间" align="center" prop="createDate" width="180">
+      <el-table-column label="创建时间" align="center" prop="createTime" width="180">
         <template slot-scope="scope">
-          <span>{{ scope.row.createDate }}</span>
+          <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -174,7 +174,7 @@ export default {
   data() {
     return {
       loading: true,
-      ids: [],
+      dictIds: [],
       single: true,
       multiple: true,
       showSearch: true,
@@ -185,9 +185,9 @@ export default {
       listQuery: {
         pageNum: 1,
         pageSize: 10,
-        label: undefined,
-        type: undefined,
-        delFlag: undefined
+        dictLabel: undefined,
+        dictType: undefined,
+        status: undefined
       }
     }
   },
@@ -208,7 +208,7 @@ export default {
     getList() {
       this.loading = true
       // 只查询字典项
-      this.listQuery.type = 'parent'
+      this.listQuery.dictType = 'parent'
       getDicts(this.addDateRange(this.listQuery, this.dateRange)).then(response => {
         this.typeList = response.data.list
         this.total = response.data.total
@@ -217,7 +217,7 @@ export default {
       )
     },
     statusFormat(row, column) {
-      return this.selectDictLabel(this.statusOptions, row.delFlag)
+      return this.selectDictLabel(this.statusOptions, row.status)
     },
     handleQuery() {
       this.listQuery.pageNum = 1
@@ -229,18 +229,18 @@ export default {
       this.handleQuery()
     },
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id)
+      this.dictIds = selection.map(item => item.dictId)
       this.single = selection.length !== 1
       this.multiple = !selection.length
     },
     handleDelete(row) {
-      const ids = row.id || this.ids
-      this.$confirm('是否确认删除字典编号为"' + ids + '"的数据项?', '警告', {
+      const dictIds = row.dictId || this.dictIds
+      this.$confirm('是否确认删除字典编号为"' + dictIds + '"的数据项?', '警告', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(function() {
-        return deleteDicts(ids)
+        return deleteDicts(dictIds)
       }).then(() => {
         this.getList()
         this.msgSuccess('删除成功')

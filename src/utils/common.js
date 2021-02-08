@@ -65,11 +65,11 @@ export function addDateRange(params, dateRange) {
 }
 
 // 回显数据字典
-export function selectDictLabel(datas, value) {
+export function selectDictLabel(datas, dictValue) {
   var actions = []
   Object.keys(datas).some((key) => {
-    if (datas[key].value === ('' + value)) {
-      actions.push(datas[key].label)
+    if (datas[key].dictValue === ('' + dictValue)) {
+      actions.push(datas[key].dictLabel)
       return true
     }
   })
@@ -84,7 +84,7 @@ export function selectDictLabels(datas, value, separator) {
   var temp = value.split(currentSeparator)
   Object.keys(value.split(currentSeparator)).some((val) => {
     Object.keys(datas).some((key) => {
-      if (datas[key].dictValue == ('' + temp[val])) {
+      if (datas[key].dictValue === ('' + temp[val])) {
         actions.push(datas[key].dictLabel + currentSeparator)
       }
     })

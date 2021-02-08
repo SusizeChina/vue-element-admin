@@ -86,12 +86,24 @@ export function deleteDicts(dictIds) {
 
 /**
  * 查询指定字典类型参数
+ * @param dictType 字典类型
+ * @returns {AxiosPromise} 字典参数列表
+ */
+export function getDictTypes(dictType) {
+  return request({
+    url: '/dict_type?dictType=' + dictType,
+    method: 'get'
+  })
+}
+
+/**
+ * 查询指定字典类型参数
  * @param type 字典类型
  * @returns {AxiosPromise} 字典参数列表
  */
-export function getDictTypes(type) {
+export function exportDictData(type) {
   return request({
-    url: '/dict_type?type=' + type,
+    url: '/dicts?type=' + type,
     method: 'get'
   })
 }

@@ -52,9 +52,9 @@
             <el-select v-model="queryParams.status" placeholder="用户状态" clearable size="small" style="width: 240px">
               <el-option
                 v-for="dict in statusOptions"
-                :key="dict.value"
-                :label="dict.label"
-                :value="dict.value"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
               />
             </el-select>
           </el-form-item>
@@ -251,9 +251,9 @@
               <el-select v-model="form.sex" placeholder="请选择">
                 <el-option
                   v-for="dict in sexOptions"
-                  :key="dict.value"
-                  :label="dict.label"
-                  :value="dict.value"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
                 />
               </el-select>
             </el-form-item>
@@ -268,8 +268,8 @@
           <el-col :span="12">
             <el-form-item label="状态">
               <el-radio-group v-model="form.status">
-                <el-radio v-for="dict in statusOptions" :key="dict.value" :label="dict.value">{{
-                  dict.label
+                <el-radio v-for="dict in statusOptions" :key="dict.dictValue" :label="dict.dictValue">{{
+                  dict.dictLabel
                 }}
                 </el-radio>
               </el-radio-group>

@@ -1,32 +1,32 @@
 <template>
   <div class="app-container">
     <el-form v-show="showSearch" ref="listForm" :model="listQuery" :inline="true" label-width="68px">
-      <el-form-item label="字典名称" prop="type">
-        <el-select v-model="listQuery.type" size="small">
+      <el-form-item label="字典名称" prop="dictType">
+        <el-select v-model="listQuery.dictType" size="small">
           <el-option
             v-for="item in typeOptions"
-            :key="item.id"
-            :label="item.label"
-            :value="item.value"
+            :key="item.dictId"
+            :label="item.dictLabel"
+            :value="item.dictValue"
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="字典标签" prop="label">
+      <el-form-item label="字典标签" prop="dictLabel">
         <el-input
-          v-model="listQuery.label"
+          v-model="listQuery.dictLabel"
           placeholder="请输入字典标签"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="状态" prop="delFlag">
-        <el-select v-model="listQuery.delFlag" placeholder="数据状态" clearable size="small">
+      <el-form-item label="状态" prop="status">
+        <el-select v-model="listQuery.status" placeholder="数据状态" clearable size="small">
           <el-option
             v-for="dict in statusOptions"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
           />
         </el-select>
       </el-form-item>
@@ -54,7 +54,7 @@
           icon="el-icon-edit"
           size="mini"
           :disabled="single"
-          @click="handleDictDataInfo(this.ids)"
+          @click="handleDictDataInfo(this.dictIds)"
         >修改
         </el-button>
       </el-col>
@@ -85,15 +85,15 @@
     <el-table v-loading="loading" :data="dataList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="序号" type="index" align="center" />
-      <el-table-column label="字典标签" align="center" prop="label" />
-      <el-table-column label="字典键值" align="center" prop="value" />
-      <el-table-column label="字典编码" align="center" prop="type" />
+      <el-table-column label="字典标签" align="center" prop="dictLabel" />
+      <el-table-column label="字典键值" align="center" prop="dictValue" />
+      <el-table-column label="字典编码" align="center" prop="dictType" />
       <el-table-column label="字典排序" align="center" prop="sort" />
-      <el-table-column label="状态" align="center" prop="delFlag" :formatter="statusFormat" />
+      <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat" />
       <el-table-column label="备注" align="center" prop="remarks" :show-overflow-tooltip="true" />
-      <el-table-column label="创建时间" align="center" prop="createDate" width="180">
+      <el-table-column label="创建时间" align="center" prop="createTime" width="180">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.createDate) }}</span>
+          <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -131,7 +131,7 @@
 </template>
 
 <script>
-import { getDictInfo, getDicts, deleteDicts } from '@/api/system/dict'
+import { getDictInfo, getDicts, deleteDicts, exportDictData } from '@/api/system/dict'
 import DictDataInfo from './dict-data-info'
 
 export default {
@@ -140,13 +140,13 @@ export default {
   data() {
     return {
       loading: true,
-      ids: [],
+      dictIds: [],
       single: true,
       multiple: true,
       showSearch: true,
       total: 0,
       dataList: [],
-      defaulttype: '',
+      defaultDictType: '',
       title: '',
       open: false,
       statusOptions: [],
@@ -154,16 +154,16 @@ export default {
       listQuery: {
         pageNum: 1,
         pageSize: 10,
-        label: undefined,
-        type: undefined,
-        delFlag: undefined
+        dictLabel: undefined,
+        dictType: undefined,
+        status: undefined
       }
     }
   },
   created() {
-    const id = this.$route.params && this.$route.params.id
-    if (id) {
-      this.getDictTypeInfo(id)
+    const dictId = this.$route.params && this.$route.params.dictId
+    if (dictId) {
+      this.getDictTypeInfo(dictId)
     } else {
       this.loading = false
     }
@@ -180,10 +180,10 @@ export default {
         this.$refs.dictDataInfo.init(row)
       })
     },
-    getDictTypeInfo(id) {
-      getDictInfo(id).then(response => {
-        this.listQuery.type = response.data.value
-        this.defaulttype = response.data.value
+    getDictTypeInfo(dictId) {
+      getDictInfo(dictId).then(response => {
+        this.listQuery.dictType = response.data.dictValue
+        this.defaultDictType = response.data.dictValue
         this.getList()
       })
     },
@@ -196,7 +196,7 @@ export default {
       })
     },
     statusFormat(row, column) {
-      return this.selectDictLabel(this.statusOptions, row.delFlag)
+      return this.selectDictLabel(this.statusOptions, row.status)
     },
     /** 搜索按钮操作 */
     handleQuery() {
@@ -206,24 +206,24 @@ export default {
     /** 重置按钮操作 */
     resetQuery() {
       this.resetForm('listForm')
-      this.listQuery.type = this.defaulttype
+      this.listQuery.dictType = this.defaultDictType
       this.handleQuery()
     },
 
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id)
+      this.dictIds = selection.map(item => item.dictId)
       this.single = selection.length !== 1
       this.multiple = !selection.length
     },
 
     handleDelete(row) {
-      const ids = row.id || this.ids
-      this.$confirm('是否确认删除字典编码为"' + ids + '"的数据项?', '警告', {
+      const dictIds = row.dictId || this.dictIds
+      this.$confirm('是否确认删除字典编码为"' + dictIds + '"的数据项?', '警告', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(function() {
-        return deleteDicts(ids)
+        return deleteDicts(dictIds)
       }).then(() => {
         this.getList()
         this.msgSuccess('删除成功')
@@ -237,7 +237,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(function() {
-        // return exportData(listQuery)
+        return exportDictData(listQuery)
       }).then(response => {
         this.download(response.msg)
       }).catch(function() {

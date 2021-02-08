@@ -3,31 +3,31 @@
   <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
     <el-form ref="form" :model="form" :rules="rules" label-width="80px">
       <el-form-item label="字典名称" prop="type">
-        <el-select v-model="form.type" size="small" :disabled="true">
+        <el-select v-model="form.dictType" size="small" :disabled="true">
           <el-option
             v-for="item in typeOptions"
-            :key="item.id"
-            :label="item.label"
-            :value="item.value"
+            :key="item.dictId"
+            :label="item.dictLabel"
+            :value="item.dictValue"
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="数据标签" prop="label">
-        <el-input v-model="form.label" placeholder="请输入数据标签" />
+      <el-form-item label="数据标签" prop="dictLabel">
+        <el-input v-model="form.dictLabel" placeholder="请输入数据标签" />
       </el-form-item>
-      <el-form-item label="数据键值" prop="value">
-        <el-input v-model="form.value" placeholder="请输入数据键值" />
+      <el-form-item label="数据键值" prop="dictValue">
+        <el-input v-model="form.dictValue" placeholder="请输入数据键值" />
       </el-form-item>
       <el-form-item label="显示排序" prop="sort">
         <el-input-number v-model="form.sort" controls-position="right" :min="0" />
       </el-form-item>
-      <el-form-item label="状态" prop="delFlag">
-        <el-radio-group v-model="form.delFlag">
+      <el-form-item label="状态" prop="status">
+        <el-radio-group v-model="form.status">
           <el-radio
             v-for="dict in statusOptions"
-            :key="dict.value"
-            :label="dict.value"
-          >{{ dict.label }}
+            :key="dict.dictValue"
+            :label="dict.dictValue"
+          >{{ dict.dictLabel }}
           </el-radio>
         </el-radio-group>
       </el-form-item>
@@ -54,10 +54,10 @@ export default {
       typeOptions: [],
       form: {},
       rules: {
-        label: [
+        dictLabel: [
           { required: true, message: '数据标签不能为空', trigger: 'blur' }
         ],
-        value: [
+        dictValue: [
           { required: true, message: '数据键值不能为空', trigger: 'blur' }
         ],
         sort: [
@@ -76,14 +76,14 @@ export default {
   },
   methods: {
     init(row) {
-      if (row.id) {
+      if (row.dictId) {
         this.handleUpdate(row)
       } else {
         this.handleAdd(row)
       }
     },
     statusFormat(row, column) {
-      return this.selectDictLabel(this.statusOptions, row.delFlag)
+      return this.selectDictLabel(this.statusOptions, row.status)
     },
     cancel() {
       this.open = false
@@ -91,11 +91,11 @@ export default {
     },
     reset() {
       this.form = {
-        id: undefined,
-        label: undefined,
-        value: undefined,
+        dictId: undefined,
+        dictLabel: undefined,
+        dictValue: undefined,
         sort: 0,
-        delFlag: '0',
+        status: '0',
         remarks: undefined
       }
       this.resetForm('form')
@@ -105,13 +105,13 @@ export default {
       this.reset()
       this.open = true
       this.title = '添加字典数据'
-      this.form.type = row.type
+      this.form.dictType = row.dictType
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset()
-      const id = row.id
-      getDictInfo(id).then(response => {
+      const dictId = row.dictId
+      getDictInfo(dictId).then(response => {
         this.form = response.data
         this.open = true
         this.title = '修改字典数据'
@@ -121,7 +121,7 @@ export default {
     submitForm: function() {
       this.$refs['form'].validate(valid => {
         if (valid) {
-          if (this.form.id !== undefined) {
+          if (this.form.dictId !== undefined) {
             updateDict(this.form).then(data => {
               this.$message({
                 message: '操作成功',

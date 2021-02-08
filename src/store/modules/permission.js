@@ -98,7 +98,7 @@ function formatRouter(asyncRouterMap) {
     const meta = {}
     meta.title = menu.menuName
     meta.icon = menu.icon
-    meta.noCache = menu.isCache === 1
+    meta.noCache = menu.isCache === '1'
 
     const roles = []
     roles.push(menu.perms)
