@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import { updateUserPwd } from '@/api/system/user'
+import { updateUserPassword } from '@/api/system/user'
 
 export default {
   props: {
@@ -71,7 +71,7 @@ export default {
     submit() {
       this.$refs['form'].validate(valid => {
         if (valid) {
-          updateUserPwd(this.user.oldPassword, this.user.newPassword).then(
+          updateUserPassword(this.user.oldPassword, this.user.newPassword).then(
             response => {
               if (response.code === 200) {
                 this.msgSuccess('修改成功')

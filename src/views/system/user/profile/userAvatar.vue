@@ -55,7 +55,7 @@
 <script>
 import store from '@/store'
 import { VueCropper } from 'vue-cropper'
-import { uploadAvatar } from '@/api/system/user'
+import { updateUser } from '@/api/system/user'
 
 export default {
   components: { VueCropper },
@@ -124,7 +124,7 @@ export default {
       this.$refs.cropper.getCropBlob(data => {
         const formData = new FormData()
         formData.append('avatarfile', data)
-        uploadAvatar(formData).then(response => {
+        updateUser(formData).then(response => {
           if (response.code === 200) {
             this.open = false
             this.options.img = process.env.VUE_APP_BASE_API + response.imgUrl

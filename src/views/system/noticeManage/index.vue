@@ -3,7 +3,12 @@
     <el-form v-show="showSearch" ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
       <el-form-item label="通知类型" prop="noticeType">
         <el-select v-model="queryParams.noticeType" placeholder="请选择通知类型" clearable style="width: 240px">
-          <el-option v-for="dict in noticeTypeOptions" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue" />
+          <el-option
+            v-for="dict in noticeTypeOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
         </el-select>
       </el-form-item>
       <el-form-item>
@@ -19,7 +24,8 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-        >新增</el-button>
+        >新增
+        </el-button>
       </el-col>
       <!-- <el-col :span="1.5">
         <el-button
@@ -67,14 +73,16 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-          >修改</el-button>
+          >修改
+          </el-button>
           <el-button
             v-hasPermi="['system:noticeManage:remove']"
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-          >删除</el-button>
+          >删除
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -94,14 +102,24 @@
           <el-col :span="24">
             <el-form-item label="通知类型" prop="noticeType">
               <el-select v-model="form.noticeType" placeholder="请通知类型">
-                <el-option v-for="dict in noticeTypeOptions" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue" />
+                <el-option
+                  v-for="dict in noticeTypeOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                />
               </el-select>
             </el-form-item>
           </el-col>
         </el-row>
         <el-form-item v-if="form.noticeType === '00'" label="通知指标" prop="noticeTarget">
           <el-select v-model="form.noticeTarget" placeholder="请选择通知指标">
-            <el-option v-for="dict in noticeTargetOptions" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue" />
+            <el-option
+              v-for="dict in noticeTargetOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            />
           </el-select>
         </el-form-item>
         <el-form-item v-if="form.noticeType === '00'" label="阈值" prop="value">
@@ -109,19 +127,31 @@
         </el-form-item>
         <el-form-item v-if="form.noticeType === '00'" label="阈值类型" prop="valueType">
           <el-select v-model="form.valueType" placeholder="请选择阈值类型">
-            <el-option v-for="dict in valueTypeOptions" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue" />
+            <el-option
+              v-for="dict in valueTypeOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            />
           </el-select>
         </el-form-item>
         <el-form-item label="通知方式" prop="receiveWayList">
           <el-checkbox-group v-model="form.receiveWayList">
-            <el-checkbox v-for="item in receiveWayOptions" :key="item.label" name="receiveWay" :label="item.label">{{ item.name }}</el-checkbox>
+            <el-checkbox v-for="item in receiveWayOptions" :key="item.label" name="receiveWay" :label="item.label">
+              {{ item.name }}
+            </el-checkbox>
             <!-- <el-checkbox label="10">邮箱</el-checkbox>
             <el-checkbox label="01">短信</el-checkbox> -->
           </el-checkbox-group>
         </el-form-item>
         <el-form-item label="联系人" prop="memberList">
           <div style="text-align:center; ">
-            <div v-for="(item,index) in form.memberList" class="user-content">{{ item.userName }}<span class="delete" @click="removeUser(index)"><i class="el-icon-delete" /></span></div>
+            <div v-for="(item,index) in form.memberList" class="user-content">{{ item.userName }}<span
+              class="delete"
+              @click="removeUser(index)"
+            ><i
+              class="el-icon-delete"
+            /></span></div>
             <div class="add-user-btn" @click="userDialogVisible = true">点击添加联系人</div>
           </div>
         </el-form-item>
@@ -132,8 +162,20 @@
       </div>
     </el-dialog>
     <!-- 添加联系人 -->
-    <el-dialog title="添加联系人" :visible.sync="userDialogVisible" :close-on-press-escape="false" width="80%" @open="onOpenSelectUser">
-      <selectUser ref="selectUserRef" :user-dialog-visible.sync="userDialogVisible" :select-user-flag="true" :selected-user-list="form.memberList" @userSelectSubmit="userSelectSubmit" />
+    <el-dialog
+      title="添加联系人"
+      :visible.sync="userDialogVisible"
+      :close-on-press-escape="false"
+      width="80%"
+      @open="onOpenSelectUser"
+    >
+      <selectUser
+        ref="selectUserRef"
+        :user-dialog-visible.sync="userDialogVisible"
+        :select-user-flag="true"
+        :selected-user-list="form.memberList"
+        @userSelectSubmit="userSelectSubmit"
+      />
     </el-dialog>
   </div>
 </template>
@@ -412,7 +454,8 @@ export default {
       }).then(() => {
         this.getList()
         this.msgSuccess('删除成功')
-      }).catch(function() {})
+      }).catch(function() {
+      })
     },
     /** 导出按钮操作 */
     handleExport() {
@@ -425,7 +468,8 @@ export default {
         return exportNoticeManage(queryParams)
       }).then(response => {
         this.download(response.msg)
-      }).catch(function() {})
+      }).catch(function() {
+      })
     },
     // 初始化
     onOpenSelectUser() {
@@ -446,30 +490,32 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.user-content{
+.user-content {
   position: relative;
   border-radius: 2px;
   font-size: 8px;
   border: 1px solid #DCDFE6;
-  text-align:center;
+  text-align: center;
   line-height: 25px;
-  width:150px;
-  height:25px;
+  width: 150px;
+  height: 25px;
   margin: 5px 0 5px 15px;
-  .delete{
-     position: absolute;
-     right: 5px;
-     cursor:hand;
-     cursor:pointer;
+
+  .delete {
+    position: absolute;
+    right: 5px;
+    cursor: hand;
+    cursor: pointer;
   }
 }
+
 .add-user-btn {
-  width:180px;
-  height:30px;
+  width: 180px;
+  height: 30px;
   line-height: 30px;
   font-size: 8px;
   border: 1px dashed;
-  cursor:hand;
-  cursor:pointer;
+  cursor: hand;
+  cursor: pointer;
 }
 </style>

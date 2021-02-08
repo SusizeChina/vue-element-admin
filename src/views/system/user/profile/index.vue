@@ -12,27 +12,33 @@
             </div>
             <ul class="list-group list-group-striped">
               <li class="list-group-item">
-                <svg-icon icon-class="user" />用户名称
+                <svg-icon icon-class="user" />
+                用户名称
                 <div class="pull-right">{{ user.userName }}</div>
               </li>
               <li class="list-group-item">
-                <svg-icon icon-class="phone" />手机号码
+                <svg-icon icon-class="phone" />
+                手机号码
                 <div class="pull-right">{{ user.phonenumber }}</div>
               </li>
               <li class="list-group-item">
-                <svg-icon icon-class="email" />用户邮箱
+                <svg-icon icon-class="email" />
+                用户邮箱
                 <div class="pull-right">{{ user.email }}</div>
               </li>
               <li class="list-group-item">
-                <svg-icon icon-class="tree" />所属部门
+                <svg-icon icon-class="tree" />
+                所属部门
                 <div v-if="user.dept" class="pull-right">{{ user.dept.deptName }} / {{ postGroup }}</div>
               </li>
               <li class="list-group-item">
-                <svg-icon icon-class="peoples" />所属角色
+                <svg-icon icon-class="peoples" />
+                所属角色
                 <div class="pull-right">{{ roleGroup }}</div>
               </li>
               <li class="list-group-item">
-                <svg-icon icon-class="date" />创建日期
+                <svg-icon icon-class="date" />
+                创建日期
                 <div class="pull-right">{{ user.createTime }}</div>
               </li>
             </ul>
@@ -61,8 +67,8 @@
 <script>
 import userAvatar from './userAvatar'
 import userInfo from './userInfo'
-import resetPwd from './resetPwd'
-import { getUserProfile } from '@/api/system/user'
+import resetPwd from './resetPassword'
+import { getLoginUserInfo } from '@/api/system/user'
 
 export default {
   name: 'Profile',
@@ -80,7 +86,7 @@ export default {
   },
   methods: {
     getUser() {
-      getUserProfile().then(response => {
+      getLoginUserInfo().then(response => {
         this.user = response.data
         this.roleGroup = response.roleGroup
         this.postGroup = response.postGroup

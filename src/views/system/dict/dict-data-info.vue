@@ -27,7 +27,8 @@
             v-for="dict in statusOptions"
             :key="dict.value"
             :label="dict.value"
-          >{{ dict.label }}</el-radio>
+          >{{ dict.label }}
+          </el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item label="备注" prop="remarks">

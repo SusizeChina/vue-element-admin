@@ -44,7 +44,8 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleDictDataInfo()"
-        >新增</el-button>
+        >新增
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -54,7 +55,8 @@
           size="mini"
           :disabled="single"
           @click="handleDictDataInfo(this.ids)"
-        >修改</el-button>
+        >修改
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -64,7 +66,8 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-        >删除</el-button>
+        >删除
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -73,7 +76,8 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-        >导出</el-button>
+        >导出
+        </el-button>
       </el-col>
       <right-toolbar :show-search.sync="showSearch" @queryTable="getList" />
     </el-row>
@@ -100,19 +104,27 @@
             type="text"
             icon="el-icon-edit"
             @click="handleDictDataInfo(scope.row)"
-          >修改</el-button>
+          >修改
+          </el-button>
           <el-button
             v-permission="['system:dict:remove']"
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-          >删除</el-button>
+          >删除
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
 
-    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
+    <pagination
+      v-show="total>0"
+      :total="total"
+      :page.sync="listQuery.page"
+      :limit.sync="listQuery.limit"
+      @pagination="getList"
+    />
     <!-- 添加或修改字典对话框 -->
     <dict-data-info ref="dictDataInfo" @refreshDataList="getList" />
   </div>
@@ -121,6 +133,7 @@
 <script>
 import { getDictInfo, getDicts, deleteDicts } from '@/api/system/dict'
 import DictDataInfo from './dict-data-info'
+
 export default {
   name: 'DictData',
   components: { DictDataInfo },
@@ -214,7 +227,8 @@ export default {
       }).then(() => {
         this.getList()
         this.msgSuccess('删除成功')
-      }).catch(function() {})
+      }).catch(function() {
+      })
     },
     handleExport() {
       const listQuery = this.listQuery
@@ -226,7 +240,8 @@ export default {
         // return exportData(listQuery)
       }).then(response => {
         this.download(response.msg)
-      }).catch(function() {})
+      }).catch(function() {
+      })
     }
   }
 }

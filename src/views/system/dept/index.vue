@@ -35,13 +35,30 @@
           size="mini"
           :disabled="single"
           @click="handleAdd"
-        >新增</el-button>
+        >新增
+        </el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button v-hasPermi="['system:dept:edit']" type="success" icon="el-icon-edit" size="mini" :disabled="single" @click="handleUpdate">修改</el-button>
+        <el-button
+          v-hasPermi="['system:dept:edit']"
+          type="success"
+          icon="el-icon-edit"
+          size="mini"
+          :disabled="single"
+          @click="handleUpdate"
+        >修改
+        </el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button v-hasPermi="['system:dept:remove']" type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">删除</el-button>
+        <el-button
+          v-hasPermi="['system:dept:remove']"
+          type="danger"
+          icon="el-icon-delete"
+          size="mini"
+          :disabled="multiple"
+          @click="handleDelete"
+        >删除
+        </el-button>
       </el-col>
       <right-toolbar :show-search.sync="showSearch" @queryTable="getList" />
     </el-row>
@@ -90,14 +107,16 @@
             type="text"
             icon="el-icon-plus"
             @click="handleAdd(scope.row)"
-          >新增</el-button>
+          >新增
+          </el-button>
           <el-button
             v-hasPermi="['system:dept:query']"
             size="mini"
             type="text"
             icon="el-icon-search"
             @click="handleInfo(scope.row)"
-          >查看详情</el-button>
+          >查看详情
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -143,7 +162,8 @@
                   v-for="dict in statusOptions"
                   :key="dict.dictValue"
                   :label="dict.dictValue"
-                >{{ dict.dictLabel }}</el-radio>
+                >{{ dict.dictLabel }}
+                </el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -296,7 +316,7 @@ export default {
       this.open = true
       this.title = '添加部门'
       listDept().then(response => {
-	        this.deptOptions = this.handleTree(response.data, 'deptId')
+        this.deptOptions = this.handleTree(response.data, 'deptId')
       })
     },
     /** 修改按钮操作 */
@@ -309,7 +329,7 @@ export default {
         this.title = '修改部门'
       })
       listDeptExcludeChild(deptId).then(response => {
-	        this.deptOptions = this.handleTree(response.data, 'deptId')
+        this.deptOptions = this.handleTree(response.data, 'deptId')
       })
     },
     /** 查询按钮操作 */
@@ -361,7 +381,8 @@ export default {
       }).then(() => {
         this.getList()
         this.msgSuccess('删除成功')
-      }).catch(function() {})
+      }).catch(function() {
+      })
     }
   }
 }

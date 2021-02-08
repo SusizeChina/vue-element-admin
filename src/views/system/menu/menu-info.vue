@@ -84,7 +84,8 @@
                 v-for="dict in visibleOptions"
                 :key="dict.value"
                 :label="dict.value"
-              >{{ dict.label }}</el-radio>
+              >{{ dict.label }}
+              </el-radio>
             </el-radio-group>
           </el-form-item>
         </el-col>
@@ -95,7 +96,8 @@
                 v-for="dict in statusOptions"
                 :key="dict.value"
                 :label="dict.value"
-              >{{ dict.label }}</el-radio>
+              >{{ dict.label }}
+              </el-radio>
             </el-radio-group>
           </el-form-item>
         </el-col>

@@ -34,7 +34,8 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleMenuInfo()"
-        >新增</el-button>
+        >新增
+        </el-button>
       </el-col>
       <right-toolbar :show-search.sync="showSearch" @queryTable="getList" />
     </el-row>
@@ -68,21 +69,24 @@
             type="text"
             icon="el-icon-edit"
             @click="handleMenuInfo(scope.row)"
-          >修改</el-button>
+          >修改
+          </el-button>
           <el-button
             v-permission="['system:menu:add']"
             size="mini"
             type="text"
             icon="el-icon-plus"
             @click="handleMenuInfo(scope.row)"
-          >新增</el-button>
+          >新增
+          </el-button>
           <el-button
             v-permission="['system:menu:remove']"
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-          >删除</el-button>
+          >删除
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -96,6 +100,7 @@
 import { deleteMenu, getALLMenus } from '@/api/system/menu'
 
 import MenuInfo from './menu-info'
+
 export default {
   name: 'Menu',
   components: { MenuInfo },
@@ -158,7 +163,8 @@ export default {
       }).then(() => {
         this.getList()
         this.msgSuccess('删除成功')
-      }).catch(function() {})
+      }).catch(function() {
+      })
     }
   }
 }

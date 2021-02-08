@@ -84,3 +84,66 @@ export function deleteUsers(userIds) {
     data: userIds
   })
 }
+/**
+ * 更改用户状态
+ * @param data 用户状态
+ * @returns {AxiosPromise} 成功、失败
+ */
+export function changeUserStatus(data) {
+  return request({
+    url: '/user/status',
+    method: 'post',
+    data: data
+  })
+}
+
+/**
+ * 重置用户密码
+ * @param data 用户ID
+ * @returns {AxiosPromise} 成功、失败
+ */
+export function resetUserPassword(data) {
+  return request({
+    url: '/user/password',
+    method: 'post',
+    data: data
+  })
+}
+/**
+ * 用户修改密码
+ * @returns {AxiosPromise} 文件
+ */
+export function updateUserPassword(data) {
+  return request({
+    url: '/user/password',
+    method: 'put',
+    data: data
+  })
+}
+
+/**
+ * 下载用户导入模板
+ * @returns {AxiosPromise} 文件
+ */
+export function importUserTemplate() {
+  return request({
+    url: '/user/template',
+    method: 'get'
+  })
+}
+
+
+/**
+ * 导出用户
+ * @param params 查询条件
+ * @returns {AxiosPromise} 文件
+ */
+export function exportUser(params) {
+  return request({
+    url: '/user/export',
+    method: 'get',
+    params: params
+  })
+}
+
+

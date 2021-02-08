@@ -65,7 +65,8 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-        >新增</el-button>
+        >新增
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -75,7 +76,8 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-        >修改</el-button>
+        >修改
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -85,7 +87,8 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-        >删除</el-button>
+        >删除
+        </el-button>
       </el-col>
       <!--
       <el-col :span="1.5">
@@ -137,7 +140,8 @@
             type="text"
             icon="el-icon-circle-check"
             @click="handleDataScope(scope.row)"
-          >数据权限</el-button>
+          >数据权限
+          </el-button>
           <!-- <el-button
             size="mini"
             type="text"
@@ -175,7 +179,8 @@
               v-for="dict in statusOptions"
               :key="dict.dictValue"
               :label="dict.dictValue"
-            >{{ dict.dictLabel }}</el-radio>
+            >{{ dict.dictLabel }}
+            </el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="菜单权限">
@@ -229,7 +234,8 @@
         <el-form-item v-show="form.dataScope == 2" label="数据权限">
           <el-checkbox v-model="deptExpand" @change="handleCheckedTreeExpand($event, 'dept')">展开/折叠</el-checkbox>
           <el-checkbox v-model="deptNodeAll" @change="handleCheckedTreeNodeAll($event, 'dept')">全选/全不选</el-checkbox>
-          <el-checkbox v-model="form.deptCheckStrictly" @change="handleCheckedTreeConnect($event, 'dept')">父子联动</el-checkbox>
+          <el-checkbox v-model="form.deptCheckStrictly" @change="handleCheckedTreeConnect($event, 'dept')">父子联动
+          </el-checkbox>
           <el-tree
             ref="dept"
             class="tree-border"
@@ -252,7 +258,16 @@
 </template>
 
 <script>
-import { listRole, getRole, delRole, addRole, updateRole, exportRole, dataScope, changeRoleStatus } from '@/api/system/role'
+import {
+  listRole,
+  getRole,
+  delRole,
+  addRole,
+  updateRole,
+  exportRole,
+  dataScope,
+  changeRoleStatus
+} from '@/api/system/role'
 import { treeselect as menuTreeselect, roleMenuTreeselect } from '@/api/system/menu'
 import { treeselect as deptTreeselect, roleDeptTreeselect } from '@/api/system/dept'
 
@@ -589,7 +604,8 @@ export default {
       }).then(() => {
         this.getList()
         this.msgSuccess('删除成功')
-      }).catch(function() {})
+      }).catch(function() {
+      })
     },
     /** 导出按钮操作 */
     handleExport() {
@@ -602,7 +618,8 @@ export default {
         return exportRole(queryParams)
       }).then(response => {
         this.download(response.msg)
-      }).catch(function() {})
+      }).catch(function() {
+      })
     }
   }
 }
