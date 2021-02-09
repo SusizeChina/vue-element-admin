@@ -5,7 +5,7 @@
       <el-col :span="4" :xs="24">
         <div class="head-container">
           <el-input
-            v-model="deptName"
+            v-model="officeName"
             placeholder="请输入部门名称"
             clearable
             size="small"
@@ -16,7 +16,7 @@
         <div class="head-container">
           <el-tree
             ref="tree"
-            :data="deptOptions"
+            :data="officeOptions"
             :props="defaultProps"
             :expand-on-click-node="false"
             :filter-node-method="filterNode"
@@ -28,9 +28,9 @@
 
       <el-col :span="20" :xs="24">
         <el-form v-show="showSearch" ref="queryForm" :model="queryParams" :inline="true" label-width="90px">
-          <el-form-item label="用户姓名" prop="name">
+          <el-form-item label="用户姓名" prop="fullName">
             <el-input
-              v-model="queryParams.name"
+              v-model="queryParams.fullName"
               placeholder="请输入用户姓名"
               clearable
               size="small"
@@ -156,9 +156,9 @@
           @select-all="handleSelectAll"
         >
           <el-table-column type="selection" width="50" align="center" />
-          <el-table-column label="用户名" align="center" prop="loginName" :formatter="selectedFormat" />
-          <el-table-column label="用户姓名" align="center" prop="name" :show-overflow-tooltip="true" />
-          <el-table-column label="部门" align="center" prop="dept.deptName" :show-overflow-tooltip="true" />
+          <el-table-column label="用户名" align="center" prop="userName" :formatter="selectedFormat" />
+          <el-table-column label="用户姓名" align="center" prop="fullName" :show-overflow-tooltip="true" />
+          <el-table-column label="部门" align="center" prop="dept.officeName" :show-overflow-tooltip="true" />
           <el-table-column label="手机号码" align="center" prop="mobile" width="120" />
           <el-table-column label="邮箱" align="center" prop="email" :show-overflow-tooltip="true" />
           <el-table-column v-if="!selectUserFlag" label="状态" align="center">
@@ -171,9 +171,9 @@
               />
             </template>
           </el-table-column>
-          <el-table-column label="创建时间" align="center" prop="createDate" width="160">
+          <el-table-column label="创建时间" align="center" prop="createTime" width="160">
             <template slot-scope="scope">
-              <span>{{ parseTime(scope.row.createDate) }}</span>
+              <span>{{ parseTime(scope.row.createTime) }}</span>
             </template>
           </el-table-column>
 
@@ -188,7 +188,7 @@
               >修改
               </el-button>
               <el-button
-                v-if="scope.row.loginName !== 1"
+                v-if="scope.row.userName !== 1"
                 v-permission="['system:user:remove']"
                 size="mini"
                 type="text"
@@ -230,13 +230,13 @@
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-row>
           <el-col :span="12">
-            <el-form-item label="用户姓名" prop="name">
-              <el-input v-model="form.name" placeholder="请输用户姓名" />
+            <el-form-item label="用户姓名" prop="fullName">
+              <el-input v-model="form.fullName" placeholder="请输用户姓名" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="归属部门" prop="officeId">
-              <TreeSelect v-model="form.officeId" :options="deptOptions" :show-count="true" placeholder="请选择归属部门" />
+              <TreeSelect v-model="form.officeId" :options="officeOptions" :normalizer="normalizer" :show-count="true" placeholder="请选择归属部门" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -278,12 +278,12 @@
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item v-if="form.loginName == undefined" label="登录账号" prop="name">
+            <el-form-item v-if="form.userName == undefined" label="登录账号" prop="name">
               <el-input v-model="form.name" placeholder="请输登录账号" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item v-if="form.loginName == undefined" label="登录密码" prop="password">
+            <el-form-item v-if="form.userName == undefined" label="登录密码" prop="password">
               <el-input v-model="form.password" placeholder="请输密码" type="password" />
             </el-form-item>
           </el-col>
@@ -314,7 +314,7 @@
         <el-row>
           <el-col :span="24">
             <el-form-item label="备注">
-              <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />
+              <el-input v-model="form.remarks" type="textarea" placeholder="请输入内容" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -403,11 +403,11 @@ export default {
       // 弹出层标题
       title: '',
       // 部门树选项
-      deptOptions: undefined,
+      officeOptions: [],
       // 是否显示弹出层
       open: false,
       // 部门名称
-      deptName: undefined,
+      officeName: undefined,
       // 默认密码
       initPassword: undefined,
       // 日期范围
@@ -424,7 +424,7 @@ export default {
       form: {},
       defaultProps: {
         children: 'children',
-        label: 'label'
+        label: 'officeName'
       },
       // 用户导入参数
       upload: {
@@ -445,17 +445,17 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        name: undefined,
+        fullName: undefined,
         mobile: undefined,
         status: undefined,
         officeId: undefined
       },
       // 表单校验
       rules: {
-        name: [
+        userName: [
           { required: true, message: '登录账号不能为空', trigger: 'blur' }
         ],
-        name: [
+        fullName: [
           { required: true, message: '用户姓名不能为空', trigger: 'blur' }
         ],
         officeId: [
@@ -485,7 +485,7 @@ export default {
   },
   watch: {
     // 根据名称筛选部门树
-    deptName(val) {
+    officeName(val) {
       this.$refs.tree.filter(val)
     }
   },
@@ -503,6 +503,16 @@ export default {
     // })
   },
   methods: {
+    normalizer(node) {
+      if (node.children && !node.children.length) {
+        delete node.children
+      }
+      return {
+        id: node.officeId,
+        label: node.officeName,
+        children: node.children
+      }
+    },
     /** 查询用户列表 */
     getList() {
       this.loading = true
@@ -516,22 +526,22 @@ export default {
     },
     selectedFormat(row, column) {
       // 设置默认选中
-      const ids = this.selectedUserList.map((item) => item.loginName)
-      if (ids.indexOf(row.loginName) !== -1) {
+      const ids = this.selectedUserList.map((item) => item.userName)
+      if (ids.indexOf(row.userName) !== -1) {
         this.$refs['userTable'].toggleRowSelection(row, true)
       }
-      return row.loginName
+      return row.userName
     },
     /** 查询部门下拉树结构 */
     getTreeOffice() {
       getTreeOffice().then((response) => {
-        this.deptOptions = response.data
+        this.officeOptions = response.data
       })
     },
     // 筛选节点
     filterNode(value, data) {
       if (!value) return true
-      return data.label.indexOf(value) !== -1
+      return data.officeName.indexOf(value) !== -1
     },
     // 节点单击事件
     handleNodeClick(data) {
@@ -551,7 +561,7 @@ export default {
         }
       )
         .then(function() {
-          return changeUserStatus(row.loginName, row.status)
+          return changeUserStatus(row.userName, row.status)
         })
         .then(() => {
           this.msgSuccess(text + '成功')
@@ -568,16 +578,16 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        loginName: undefined,
+        userName: undefined,
         officeId: undefined,
-        name: undefined,
-        name: undefined,
+        fullName: undefined,
+        officeName: undefined,
         password: undefined,
         mobile: undefined,
         email: undefined,
         sex: undefined,
         status: '0',
-        remark: undefined,
+        remarks: undefined,
         postIds: [],
         roleIds: []
       }
@@ -596,7 +606,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map((item) => item.loginName)
+      this.ids = selection.map((item) => item.userName)
       this.names = selection.map((item) => item.name)
       this.single = selection.length !== 1
       this.multiple = !selection.length
@@ -606,13 +616,13 @@ export default {
     },
     handleSelect(selection, row) {
       console.info('111' + selection)
-      const ids = selection.map((item) => item.loginName)
+      const ids = selection.map((item) => item.userName)
       const list = this.userList
       for (var i = 0; i < this.userList.length; i++) {
         const data = this.userList[i]
-        if (ids.indexOf(data.loginName) === -1) { // 没勾选
+        if (ids.indexOf(data.userName) === -1) { // 没勾选
           for (var j = 0; j < this.selectedUserList.length; j++) {
-            if (data.loginName === this.selectedUserList[j].loginName) {
+            if (data.userName === this.selectedUserList[j].userName) {
               // 删除选中
               this.selectedUserList.splice(j, 1)
             }
@@ -621,7 +631,7 @@ export default {
           let selected = false
           for (var j = 0; j < this.selectedUserList.length; j++) {
             // 判断之前是否已经放入数组
-            if (data.loginName === this.selectedUserList[j].loginName) {
+            if (data.userName === this.selectedUserList[j].userName) {
               // 选中
               selected = true
               break
@@ -636,7 +646,7 @@ export default {
     /** 新增按钮操作 */
     handleAdd() {
       this.reset()
-      this.getTreeselect()
+      this.getTreeOffice()
       getUserInfo().then((response) => {
         this.postOptions = response.posts
         this.roleOptions = response.roles
@@ -648,9 +658,9 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset()
-      this.getTreeselect()
-      const loginName = row.loginName || this.ids
-      getUserInfo(loginName).then((response) => {
+      this.getTreeOffice()
+      const userName = row.userName || this.ids
+      getUserInfo(userName).then((response) => {
         this.form = response.data
         this.postOptions = response.posts
         this.roleOptions = response.roles
@@ -663,14 +673,14 @@ export default {
     },
     /** 重置密码按钮操作 */
     handleResetPwd(row) {
-      const loginName = row.loginName || this.ids[0]
+      const userName = row.userName || this.ids[0]
       const name = row.name || this.names
       this.$prompt('请输入"' + name + '"的新密码', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消'
       })
         .then(({ value }) => {
-          resetUserPassword(loginName, value).then((response) => {
+          resetUserPassword(userName, value).then((response) => {
             if (response.code === 200) {
               this.msgSuccess('修改成功，新密码是：' + value)
             }
@@ -683,7 +693,7 @@ export default {
     submitForm: function() {
       this.$refs['form'].validate((valid) => {
         if (valid) {
-          if (this.form.loginName !== undefined) {
+          if (this.form.userName !== undefined) {
             updateUser(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess('修改成功')
@@ -705,9 +715,9 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const loginNames = row.loginName || this.ids
+      const userNames = row.userName || this.ids
       this.$confirm(
-        '是否确认删除编号为"' + loginNames + '"这个编号吗?',
+        '是否确认删除编号为"' + userNames + '"这个编号吗?',
         '警告',
         {
           confirmButtonText: '确定',
@@ -716,7 +726,7 @@ export default {
         }
       )
         .then(function() {
-          return deleteUsers(loginNames)
+          return deleteUsers(userNames)
         })
         .then(() => {
           this.getList()
@@ -771,7 +781,6 @@ export default {
     },
     // 初始化弹出框
     initOpenSelectUser() {
-      console.info(7777777777777)
       this.getList()
     },
     cancelDialog() {

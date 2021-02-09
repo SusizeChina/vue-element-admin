@@ -1,9 +1,9 @@
 <template>
   <div class="app-container">
-    <el-form v-show="showSearch" ref="queryForm" :model="queryParams" :inline="true">
+    <el-form v-show="showSearch" ref="queryForm" :model="listQuery" :inline="true">
       <el-form-item label="角色名称" prop="roleName">
         <el-input
-          v-model="queryParams.roleName"
+          v-model="listQuery.roleName"
           placeholder="请输入角色名称"
           clearable
           size="small"
@@ -11,10 +11,9 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <!--
       <el-form-item label="权限字符" prop="roleKey">
         <el-input
-          v-model="queryParams.roleKey"
+          v-model="listQuery.roleKey"
           placeholder="请输入权限字符"
           clearable
           size="small"
@@ -24,7 +23,7 @@
       </el-form-item>
       <el-form-item label="状态" prop="status">
         <el-select
-          v-model="queryParams.status"
+          v-model="listQuery.status"
           placeholder="角色状态"
           clearable
           size="small"
@@ -48,9 +47,8 @@
           range-separator="-"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
-        ></el-date-picker>
+        />
       </el-form-item>
-      -->
       <el-form-item>
         <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">查询</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -60,7 +58,7 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
-          v-hasPermi="['system:role:add']"
+          v-permission="['system:role:add']"
           type="primary"
           icon="el-icon-plus"
           size="mini"
@@ -70,7 +68,7 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
-          v-hasPermi="['system:role:edit']"
+          v-permission="['system:role:edit']"
           type="success"
           icon="el-icon-edit"
           size="mini"
@@ -81,7 +79,7 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
-          v-hasPermi="['system:role:remove']"
+          v-permission="['system:role:remove']"
           type="danger"
           icon="el-icon-delete"
           size="mini"
@@ -90,17 +88,17 @@
         >删除
         </el-button>
       </el-col>
-      <!--
+
       <el-col :span="1.5">
         <el-button
+          v-permission="['system:role:export']"
           type="warning"
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['system:role:export']"
         >导出</el-button>
       </el-col>
-      -->
+
       <right-toolbar :show-search.sync="showSearch" @queryTable="getList" />
     </el-row>
 
@@ -127,28 +125,28 @@
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <!-- <el-button
+          <el-button
+            v-permission="['system:role:edit']"
             size="mini"
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:role:edit']"
-          >修改</el-button> -->
+          >修改</el-button>
           <el-button
-            v-hasPermi="['system:role:edit']"
+            v-permission="['system:role:edit']"
             size="mini"
             type="text"
             icon="el-icon-circle-check"
             @click="handleDataScope(scope.row)"
           >数据权限
           </el-button>
-          <!-- <el-button
+          <el-button
+            v-permission="['system:role:remove']"
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['system:role:remove']"
-          >删除</el-button> -->
+          >删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -156,8 +154,8 @@
     <pagination
       v-show="total>0"
       :total="total"
-      :page.sync="queryParams.pageNum"
-      :limit.sync="queryParams.pageSize"
+      :page.sync="listQuery.pageNum"
+      :limit.sync="listQuery.pageSize"
       @pagination="getList"
     />
 
@@ -200,11 +198,11 @@
             :props="defaultProps"
           />
         </el-form-item>
-        <!--
+
         <el-form-item label="备注">
-          <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"></el-input>
+          <el-input v-model="form.remarks" type="textarea" placeholder="请输入内容" />
         </el-form-item>
-        -->
+
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -258,16 +256,7 @@
 </template>
 
 <script>
-import {
-  listRole,
-  getRole,
-  delRole,
-  addRole,
-  updateRole,
-  exportRole,
-  dataScope,
-  changeRoleStatus
-} from '@/api/system/role'
+import { addRole, updateRole, deleteRole, getRoleInfo, getRoles, getAllRoles, deleteRoles, changeRoleStatus } from '@/api/system/role'
 import { treeselect as menuTreeselect, roleMenuTreeselect } from '@/api/system/menu'
 import { treeselect as deptTreeselect, roleDeptTreeselect } from '@/api/system/dept'
 
@@ -331,7 +320,7 @@ export default {
       // 部门列表
       deptOptions: [],
       // 查询参数
-      queryParams: {
+      listQuery: {
         pageNum: 1,
         pageSize: 10,
         roleName: undefined,
@@ -368,7 +357,7 @@ export default {
     /** 查询角色列表 */
     getList() {
       this.loading = true
-      listRole(this.addDateRange(this.queryParams, this.dateRange)).then(
+      listRole(this.addDateRange(this.listQuery, this.dateRange)).then(
         response => {
           this.roleList = response.rows
           this.total = response.total
@@ -464,13 +453,13 @@ export default {
         deptIds: [],
         menuCheckStrictly: true,
         deptCheckStrictly: true,
-        remark: undefined
+        remarks: undefined
       }
       this.resetForm('form')
     },
     /** 搜索按钮操作 */
     handleQuery() {
-      this.queryParams.pageNum = 1
+      this.listQuery.pageNum = 1
       this.getList()
     },
     /** 重置按钮操作 */
@@ -609,13 +598,13 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      const queryParams = this.queryParams
+      const listQuery = this.listQuery
       this.$confirm('是否确认导出所有角色数据项?', '警告', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(function() {
-        return exportRole(queryParams)
+        return exportRole(listQuery)
       }).then(response => {
         this.download(response.msg)
       }).catch(function() {

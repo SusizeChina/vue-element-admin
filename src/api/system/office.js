@@ -83,3 +83,15 @@ export function deleteOffices(officeIds) {
     data: officeIds
   })
 }
+/**
+ * 查询所有机构/部门列表
+ * @param data 分页信息
+ * @returns {AxiosPromise} 机构/部门列表
+ */
+export function getAllOffices(data) {
+  return request({
+    url: '/office_all',
+    method: 'get',
+    params: data
+  })
+}
