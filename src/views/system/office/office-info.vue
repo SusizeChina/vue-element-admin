@@ -182,24 +182,24 @@ export default {
     handleUpdate(row) {
       this.reset()
       const officeId = row.officeId || this.officeIds
-      getOfficeInfo(officeId).then(response => {
+      getOfficeInfo({ 'officeId': officeId }).then(response => {
         this.form = response.data
         this.open = true
         this.title = '修改部门'
       })
-      getAllOffices(officeId).then(response => {
+      getAllOffices({ 'officeId': officeId }).then(response => {
         this.officeOptions = this.handleTree(response.data, 'officeId', 'parentId', 'children', '0')
       })
     },
     /** 查询按钮操作 */
     handleInfo(row) {
       this.reset()
-      getOfficeInfo(row.officeId).then(response => {
+      getOfficeInfo({ 'officeId': row.officeId }).then(response => {
         this.form = response.data
         this.open = true
         this.title = '查询部门'
       })
-      getAllOffices(row.officeId).then(response => {
+      getAllOffices({ 'officeId': row.officeId }).then(response => {
         this.officeOptions = this.handleTree(response.data, 'officeId', 'parentId', 'children', '0')
       })
     },

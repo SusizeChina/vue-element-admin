@@ -26,7 +26,7 @@ import { resetForm, addDateRange, selectDictLabel, selectDictLabels, download, h
 import { parseTime, formatDate, formatTime } from '@/utils/index'
 import { getDictTypes } from '@/api/system/dict'
 
-import { SYS_USER_SEX, SYS_USER_STATUS, SYS_ROLE_STATUS, SYS_OFFICE_STATUS, SYS_DICT_STATUS, SYS_MENU_TYPE, SYS_SHOW_HIDE, STATUS } from '@/utils/constant'
+import { SYS_USER_SEX, SYS_USER_STATUS, SYS_ROLE_STATUS, SYS_OFFICE_STATUS, SYS_DICT_STATUS, SYS_MENU_TYPE, SYS_SHOW_HIDE, STATUS, DATA_SCOPE } from '@/utils/constant'
 // 全局方法挂载
 Vue.prototype.getDictTypes = getDictTypes
 Vue.prototype.getConfigKey = getConfigKey
@@ -49,6 +49,7 @@ Vue.prototype.SYS_DICT_STATUS = SYS_DICT_STATUS
 Vue.prototype.SYS_MENU_TYPE = SYS_MENU_TYPE
 Vue.prototype.SYS_SHOW_HIDE = SYS_SHOW_HIDE
 Vue.prototype.STATUS = STATUS
+Vue.prototype.DATA_SCOPE = DATA_SCOPE
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api

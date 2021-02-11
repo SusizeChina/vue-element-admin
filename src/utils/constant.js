@@ -49,3 +49,9 @@ export const SYS_SHOW_HIDE = 'sys_show_hide'
  * @type {string}
  */
 export const STATUS = 'status'
+
+/**
+ * 字典类型-数据权限
+ * @type {string}
+ */
+export const DATA_SCOPE = 'data_scope'

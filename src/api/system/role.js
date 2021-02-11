@@ -33,8 +33,9 @@ export function updateRole(role) {
  */
 export function deleteRole(roleId) {
   return request({
-    url: '/role/' + roleId,
-    method: 'delete'
+    url: '/role',
+    method: 'delete',
+    data: { 'roleId': roleId }
   })
 }
 /**
@@ -44,8 +45,9 @@ export function deleteRole(roleId) {
  */
 export function getRoleInfo(roleId) {
   return request({
-    url: '/role/' + roleId,
-    method: 'get'
+    url: '/role',
+    method: 'get',
+    params: { 'roleId': roleId }
   })
 }
 /**
@@ -67,7 +69,7 @@ export function getRoles(data) {
  */
 export function getAllRoles(role) {
   return request({
-    url: '/all/role',
+    url: '/role/all',
     method: 'get',
     params: role
   })

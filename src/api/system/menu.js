@@ -53,8 +53,9 @@ export function updateMenu(menu) {
  */
 export function deleteMenu(menuId) {
   return request({
-    url: '/menu/' + menuId,
-    method: 'delete'
+    url: '/menu',
+    method: 'delete',
+    data: menuId
   })
 }
 /**
@@ -64,8 +65,9 @@ export function deleteMenu(menuId) {
  */
 export function getMenuInfo(menuId) {
   return request({
-    url: '/menu/' + menuId,
-    method: 'get'
+    url: '/menu',
+    method: 'get',
+    params: menuId
   })
 }
 /**
@@ -88,7 +90,7 @@ export function getMenus(data) {
  */
 export function getALLMenus(menu) {
   return request({
-    url: '/menu_all',
+    url: '/menu/all',
     method: 'get',
     params: menu
   })
@@ -104,5 +106,18 @@ export function deleteMenus(menuIds) {
     url: '/menus',
     method: 'delete',
     data: menuIds
+  })
+}
+
+/**
+ * 查询角色的所有菜单列表
+ * @param roleId 菜单ID
+ * @returns {AxiosPromise} 菜单列表
+ */
+export function getRoleMenus(roleId) {
+  return request({
+    url: '/menu/role',
+    method: 'get',
+    params: { 'roleId': roleId }
   })
 }

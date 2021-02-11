@@ -219,7 +219,7 @@ export default {
     handleUpdate(row) {
       this.reset()
       this.getTreeSelect()
-      getMenuInfo(row.menuId).then(response => {
+      getMenuInfo({ 'menuId': row.menuId }).then(response => {
         this.form = response.data
         this.open = true
         this.title = '修改菜单'

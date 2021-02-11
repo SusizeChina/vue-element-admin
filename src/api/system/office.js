@@ -43,8 +43,9 @@ export function updateOffice(office) {
  */
 export function deleteOffice(officeId) {
   return request({
-    url: '/office/' + officeId,
-    method: 'delete'
+    url: '/office',
+    method: 'delete',
+    data: { 'officeId': officeId }
   })
 }
 /**
@@ -54,8 +55,9 @@ export function deleteOffice(officeId) {
  */
 export function getOfficeInfo(officeId) {
   return request({
-    url: '/office/' + officeId,
-    method: 'get'
+    url: '/office',
+    method: 'get',
+    params: { 'officeId': officeId }
   })
 }
 /**
@@ -90,8 +92,20 @@ export function deleteOffices(officeIds) {
  */
 export function getAllOffices(data) {
   return request({
-    url: '/office_all',
+    url: '/office/all',
     method: 'get',
     params: data
+  })
+}
+/**
+ * 查询角色机构/部门列表
+ * @param roleId 角色Id
+ * @returns {AxiosPromise} 机构/部门列表
+ */
+export function getRoleOffices(roleId) {
+  return request({
+    url: '/office/role',
+    method: 'get',
+    params: { 'roleId': roleId }
   })
 }
