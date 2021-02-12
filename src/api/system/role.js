@@ -87,3 +87,39 @@ export function deleteRoles(roleIds) {
     data: roleIds
   })
 }
+/**
+ * 导出角色
+ * @param role 角色信息
+ * @returns {AxiosPromise} 成功、失败
+ */
+export function roleExport(role) {
+  return request({
+    url: '/role/export',
+    method: 'get',
+    params: role
+  })
+}
+
+/**
+ * 下载角色导入模板
+ * @returns {AxiosPromise} 成功、失败
+ */
+export function roleTemplate() {
+  return request({
+    url: '/role/template',
+    method: 'get'
+  })
+}
+
+/**
+ * 导入角色
+ * @param file 角色ID集合
+ * @returns {AxiosPromise} 成功、失败
+ */
+export function roleImport(file) {
+  return request({
+    url: '/role/import',
+    method: 'post',
+    data: file
+  })
+}

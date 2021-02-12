@@ -43,8 +43,9 @@ export function updateDict(dict) {
  */
 export function deleteDict(dictId) {
   return request({
-    url: '/dict/' + dictId,
-    method: 'delete'
+    url: '/dict',
+    method: 'delete',
+    data: { 'dictId': dictId }
   })
 }
 /**
@@ -54,8 +55,9 @@ export function deleteDict(dictId) {
  */
 export function getDictInfo(dictId) {
   return request({
-    url: '/dict/' + dictId,
-    method: 'get'
+    url: '/dict',
+    method: 'get',
+    params: { 'dictId': dictId }
   })
 }
 /**

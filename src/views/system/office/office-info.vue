@@ -170,7 +170,7 @@ export default {
     handleAdd(row) {
       this.reset()
       if (row !== undefined) {
-        this.form.parentId = row.officeId || this.officeIds[0]
+        this.form.parentId = row.officeId
       }
       this.open = true
       this.title = '添加部门'
@@ -181,7 +181,7 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset()
-      const officeId = row.officeId || this.officeIds
+      const officeId = row.officeId
       getOfficeInfo({ 'officeId': officeId }).then(response => {
         this.form = response.data
         this.open = true
