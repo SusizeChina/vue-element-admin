@@ -44,8 +44,11 @@ export function updateUser(user) {
  */
 export function deleteUser(userId) {
   return request({
-    url: '/user/' + userId,
-    method: 'delete'
+    url: '/user',
+    method: 'delete',
+    data: {
+      'userId': userId
+    }
   })
 }
 /**
@@ -55,8 +58,11 @@ export function deleteUser(userId) {
  */
 export function getUserInfo(userId) {
   return request({
-    url: '/user/' + userId,
-    method: 'get'
+    url: '/user',
+    method: 'get',
+    params: {
+      'userId': userId
+    }
   })
 }
 /**
@@ -132,7 +138,6 @@ export function importUserTemplate() {
   })
 }
 
-
 /**
  * 导出用户
  * @param params 查询条件
@@ -145,5 +150,4 @@ export function exportUser(params) {
     params: params
   })
 }
-
 
