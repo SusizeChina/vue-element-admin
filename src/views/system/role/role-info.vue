@@ -19,16 +19,16 @@
         </el-radio-group>
       </el-form-item>
       <el-form-item label="菜单权限">
-        <el-checkbox v-model="menuExpand" @change="handleCheckedTreeExpand($event, 'menu')">展开/折叠</el-checkbox>
-        <el-checkbox v-model="menuNodeAll" @change="handleCheckedTreeNodeAll($event, 'menu')">全选/全不选</el-checkbox>
-        <el-checkbox v-model="form.menuCheckStrictly" @change="handleCheckedTreeConnect($event, 'menu')">父子联动</el-checkbox>
+        <el-checkbox v-model="menuExpand" @change="handleCheckedTreeExpand($event)">展开/折叠</el-checkbox>
+        <el-checkbox v-model="menuNodeAll" @change="handleCheckedTreeNodeAll($event)">全选/全不选</el-checkbox>
+        <el-checkbox v-model="menuCheckStrictly" @change="handleCheckedTreeConnect($event)">父子联动</el-checkbox>
         <el-tree
           ref="menu"
           class="tree-border"
           :data="menuOptions"
           show-checkbox
           node-key="menuId"
-          :check-strictly="!form.menuCheckStrictly"
+          :check-strictly="!menuCheckStrictly"
           empty-text="加载中，请稍后"
           :props="menuProps"
         />
@@ -55,6 +55,7 @@ export default {
       open: false,
       menuExpand: false,
       menuNodeAll: false,
+      menuCheckStrictly: true,
       statusOptions: [],
       menuOptions: [],
       form: {},
@@ -109,35 +110,28 @@ export default {
       }
       this.menuExpand = false
       this.menuNodeAll = false
+      this.menuCheckStrictly = true
       this.form = {
         roleId: undefined,
         roleName: undefined,
         roleKey: undefined,
         status: '0',
         menuIds: [],
-        menuCheckStrictly: true,
         remarks: undefined
       }
       this.resetForm('form')
     },
-    // 树权限（展开/折叠）
-    handleCheckedTreeExpand(value, type) {
-      if (type === 'menu') {
-        const treeList = this.menuOptions
-        for (let i = 0; i < treeList.length; i++) {
-          this.$refs.menu.store.nodesMap[treeList[i].menuId].expanded = value
-        }
+    handleCheckedTreeExpand(value) {
+      const treeList = this.menuOptions
+      for (let i = 0; i < treeList.length; i++) {
+        this.$refs.menu.store.nodesMap[treeList[i].menuId].expanded = value
       }
     },
-    handleCheckedTreeNodeAll(value, type) {
-      if (type === 'menu') {
-        this.$refs.menu.setCheckedNodes(value ? this.menuOptions : [])
-      }
+    handleCheckedTreeNodeAll(value) {
+      this.$refs.menu.setCheckedNodes(value ? this.menuOptions : [])
     },
-    handleCheckedTreeConnect(value, type) {
-      if (type === 'menu') {
-        this.form.menuCheckStrictly = !!value
-      }
+    handleCheckedTreeConnect(value) {
+      this.menuCheckStrictly = value
     },
     handleAdd() {
       this.reset()

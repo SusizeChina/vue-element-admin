@@ -51,12 +51,12 @@
       </el-row>
       <el-row>
         <el-col :span="12">
-          <el-form-item v-if="form.userName == undefined" label="登录账号" prop="name">
-            <el-input v-model="form.name" placeholder="请输登录账号" />
+          <el-form-item v-if="form.userId == undefined" label="登录账号" prop="userName">
+            <el-input v-model="form.userName" placeholder="请输登录账号" />
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item v-if="form.userName == undefined" label="登录密码" prop="password">
+          <el-form-item v-if="form.userId == undefined" label="登录密码" prop="password">
             <el-input v-model="form.password" placeholder="请输密码" type="password" />
           </el-form-item>
         </el-col>
@@ -238,7 +238,7 @@ export default {
     submitForm: function() {
       this.$refs['form'].validate((valid) => {
         if (valid) {
-          if (this.form.userName !== undefined) {
+          if (this.form.userId !== undefined) {
             updateUser(this.form).then(data => {
               this.$message({
                 message: '操作成功',

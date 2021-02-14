@@ -101,7 +101,15 @@
           @click="handleExport"
         >导出
         </el-button>
-
+        <el-button
+          v-permission="['system:user:remove']"
+          type="danger"
+          icon="el-icon-delete"
+          size="mini"
+          :disabled="multiple"
+          @click="handleDelete"
+        >删除
+        </el-button>
         <el-table
           ref="userTable"
           v-loading="loading"
@@ -111,6 +119,7 @@
           @select-all="handleSelectAll"
         >
           <el-table-column type="selection" width="50" align="center" />
+          <el-table-column label="序号" type="index" align="center" />
           <el-table-column label="用户名" align="center" prop="userName" />
           <el-table-column label="用户姓名" align="center" prop="fullName" :show-overflow-tooltip="true" />
           <el-table-column label="部门" align="center" prop="officeId" :formatter="officeNameFormat" :show-overflow-tooltip="true" />
@@ -209,6 +218,7 @@ export default {
       officeName: undefined,
       userList: [],
       userIds: [],
+      fullNames: [],
       dateRange: [],
       statusOptions: [],
       sexOptions: [],
@@ -332,7 +342,7 @@ export default {
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.userIds = selection.map((item) => item.userId)
-      this.names = selection.map((item) => item.name)
+      this.fullNames = selection.map((item) => item.fullName)
       this.single = selection.length !== 1
       this.multiple = !selection.length
     },
@@ -369,14 +379,14 @@ export default {
     },
     /** 重置密码按钮操作 */
     handleResetPwd(row) {
-      const userName = row.userId || this.userIds[0]
-      const name = row.fullName || this.names
-      this.$prompt('请输入"' + name + '"的新密码', '提示', {
+      const userId = row.userId || this.userIds[0]
+      const fullNames = row.fullName || this.fullNames
+      this.$prompt('请输入"' + fullNames + '"的新密码', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消'
       })
         .then(({ value }) => {
-          resetUserPassword(userName, value).then((response) => {
+          resetUserPassword(userId, value).then((response) => {
             if (response.code === 200) {
               this.msgSuccess('修改成功，新密码是：' + value)
             }
@@ -388,8 +398,9 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const userIds = row.userId || this.userIds
+      const fullNames = row.fullName || this.fullNames
       this.$confirm(
-        '是否确认删除编号为"' + userIds + '"这个编号吗?',
+        '是否确认删除【' + fullNames + '】,这' + fullNames.length + '个用户吗?',
         '警告',
         {
           confirmButtonText: '确定',

@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form v-show="showSearch" ref="queryForm" :model="listQuery" :inline="true">
+    <el-form v-show="showSearch" ref="listForm" :model="listQuery" :inline="true">
       <el-form-item label="角色名称" prop="roleName">
         <el-input
           v-model="listQuery.roleName"
@@ -54,7 +54,6 @@
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
-
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
@@ -68,17 +67,6 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
-          v-permission="['system:role:edit']"
-          type="success"
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleRoleInfo"
-        >修改
-        </el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
           v-permission="['system:role:remove']"
           type="danger"
           icon="el-icon-delete"
@@ -88,7 +76,6 @@
         >删除
         </el-button>
       </el-col>
-
       <el-col :span="1.5">
         <el-button
           v-permission="['system:role:export']"
@@ -98,16 +85,16 @@
           @click="handleExport"
         >导出</el-button>
       </el-col>
-
-      <right-toolbar :show-search.sync="showSearch" @queryTable="getList" />
+      <el-col :span="19.5">
+        <right-toolbar :show-search.sync="showSearch" @queryTable="getList" />
+      </el-col>
     </el-row>
-
     <el-table v-loading="loading" :data="roleList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="角色编号" prop="roleId" width="220" />
-      <el-table-column label="角色名称" prop="roleName" :show-overflow-tooltip="true" width="250" />
-      <el-table-column label="权限字符" prop="roleKey" :show-overflow-tooltip="true" width="250" />
-      <el-table-column label="状态" align="center" width="200">
+      <el-table-column label="序号" type="index" align="center" width="200" />
+      <el-table-column label="角色名称" prop="roleName" :show-overflow-tooltip="true" width="200" />
+      <el-table-column label="权限字符" prop="roleKey" :show-overflow-tooltip="true" width="200" />
+      <el-table-column label="状态" align="center" width="100">
         <template slot-scope="scope">
           <el-switch
             v-model="scope.row.status"
@@ -174,6 +161,7 @@ export default {
     return {
       loading: true,
       roleIds: [],
+      roleNames: [],
       single: true,
       multiple: true,
       showSearch: true,
@@ -231,9 +219,11 @@ export default {
       }).then(function() {
         return updateRole({ 'roleId': row.roleId, 'status': row.status })
       }).then(() => {
-        this.msgSuccess(text + '成功')
+        this.msgSuccess(text + '角色成功')
+        this.getList()
       }).catch(function() {
-        row.status = row.status === '0' ? '1' : '0'
+        this.msgSuccess(text + '角色失败')
+        this.getList()
       })
     },
     handleQuery() {
@@ -242,26 +232,40 @@ export default {
     },
     resetQuery() {
       this.dateRange = []
-      this.resetForm('queryForm')
+      this.resetForm('listForm')
       this.handleQuery()
     },
     handleSelectionChange(selection) {
       this.roleIds = selection.map(item => item.roleId)
+      this.roleNames = selection.map(item => item.roleName)
       this.single = selection.length !== 1
       this.multiple = !selection.length
     },
     handleDelete(row) {
-      const roleIds = row.roleId || this.roleIds
-      this.$confirm('是否确认删除角色编号为"' + roleIds + '"的数据项?', '警告', {
+      let roleIds = []
+      if (row.roleId) {
+        roleIds.push(row.roleId)
+      } else {
+        roleIds = this.roleIds
+      }
+      let roleNames = []
+      if (row.roleName) {
+        roleNames.push(row.roleName)
+      } else {
+        roleNames = this.roleNames
+      }
+      this.$confirm('是否确认删除【' + roleNames + '】' + roleNames.length + '个角色?', '警告', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(function() {
         return deleteRoles(roleIds)
       }).then(() => {
+        this.msgSuccess('删除角色成功')
         this.getList()
-        this.msgSuccess('删除成功')
       }).catch(function() {
+        this.msgSuccess('删除角色失败')
+        this.getList()
       })
     },
     handleExport() {

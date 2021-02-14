@@ -4,7 +4,7 @@
   <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
     <el-form ref="form" :model="form" :rules="rules" label-width="80px">
       <el-row>
-        <el-col v-if="form.parentId !== '0'" :span="24">
+        <el-col :span="24">
           <el-form-item label="上级部门" prop="parentId">
             <TreeSelect v-model="form.parentId" :options="officeOptions" :normalizer="normalizer" placeholder="选择上级部门" />
           </el-form-item>
@@ -65,32 +65,11 @@ export default {
   components: { TreeSelect },
   data() {
     return {
-      // 遮罩层
-      loading: true,
-      // 非单个禁用
-      single: true,
-      // 非多个禁用
-      multiple: true,
-      // 显示搜索条件
-      showSearch: true,
-      // 表格树数据
-      officeList: [],
-      // 部门树选项
       officeOptions: [],
-      // 弹出层标题
-      title: '',
-      // 是否显示弹出层
+      title: undefined,
       open: false,
-      // 状态数据字典
       statusOptions: [],
-      // 查询参数
-      listParams: {
-        officeName: undefined,
-        status: undefined
-      },
-      // 表单参数
       form: {},
-      // 表单校验
       rules: {
         parentId: [
           { required: true, message: '上级部门不能为空', trigger: 'blur' }
@@ -122,6 +101,7 @@ export default {
     this.getDictTypes(this.STATUS).then(response => {
       this.statusOptions = response.data
     })
+    this.getTreeOffice()
   },
   methods: {
     init(row) {
@@ -141,10 +121,6 @@ export default {
         label: node.officeName,
         children: node.children
       }
-    },
-    // 字典状态字典翻译
-    statusFormat(row, column) {
-      return this.selectDictLabel(this.statusOptions, row.status)
     },
     // 取消按钮
     cancel() {
@@ -174,33 +150,22 @@ export default {
       }
       this.open = true
       this.title = '添加部门'
-      getAllOffices().then(response => {
-        this.officeOptions = this.handleTree(response.data, 'officeId', 'parentId', 'children', '0')
-      })
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset()
       const officeId = row.officeId
-      getOfficeInfo({ 'officeId': officeId }).then(response => {
+      getOfficeInfo(officeId).then(response => {
         this.form = response.data
         this.open = true
         this.title = '修改部门'
       })
-      getAllOffices({ 'officeId': officeId }).then(response => {
-        this.officeOptions = this.handleTree(response.data, 'officeId', 'parentId', 'children', '0')
-      })
     },
-    /** 查询按钮操作 */
-    handleInfo(row) {
-      this.reset()
-      getOfficeInfo({ 'officeId': row.officeId }).then(response => {
-        this.form = response.data
-        this.open = true
-        this.title = '查询部门'
-      })
-      getAllOffices({ 'officeId': row.officeId }).then(response => {
-        this.officeOptions = this.handleTree(response.data, 'officeId', 'parentId', 'children', '0')
+    getTreeOffice() {
+      getAllOffices().then(response => {
+        const office = { officeId: '0', officeName: '主类目', children: [] }
+        office.children = this.handleTree(response.data, 'officeId', 'parentId', 'children', '0')
+        this.officeOptions.push(office)
       })
     },
     /** 提交按钮 */

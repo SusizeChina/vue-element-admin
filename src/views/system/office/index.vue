@@ -34,19 +34,8 @@
           icon="el-icon-plus"
           size="mini"
           :disabled="single"
-          @click="handleOfficeInfo()"
+          @click="handleOfficeInfo"
         >新增
-        </el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          v-permission="['system:office:edit']"
-          type="success"
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleOfficeInfo()"
-        >修改
         </el-button>
       </el-col>
       <el-col :span="1.5">
@@ -60,7 +49,10 @@
         >删除
         </el-button>
       </el-col>
-      <right-toolbar :show-search.sync="showSearch" @queryTable="getList" />
+      <el-col :span="19">
+        <right-toolbar :show-search.sync="showSearch" @queryTable="getList" />
+      </el-col>
+
     </el-row>
 
     <el-table
@@ -73,9 +65,9 @@
     >
       <el-table-column type="selection" width="50" align="center" />
       <el-table-column prop="officeName" label="部门名称" width="260" />
-      <el-table-column prop="sort" label="排序" width="200" />
-      <el-table-column prop="status" label="状态" :formatter="statusFormat" width="200" />
-      <el-table-column prop="master" label="负责人" width="200" />
+      <el-table-column prop="sort" label="排序" width="150" />
+      <el-table-column prop="status" label="状态" :formatter="statusFormat" width="150" />
+      <el-table-column prop="master" label="负责人" width="150" />
       <el-table-column label="创建时间" align="center" prop="createTime" width="200">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
@@ -109,19 +101,10 @@
             @click="handleOfficeInfo(scope.row)"
           >新增
           </el-button>
-          <el-button
-            v-permission="['system:office:query']"
-            size="mini"
-            type="text"
-            icon="el-icon-search"
-            @click="handleOfficeInfo(scope.row)"
-          >查看详情
-          </el-button>
         </template>
       </el-table-column>
     </el-table>
 
-    <!-- 添加或修改菜单对话框 -->
     <office-info ref="officeInfo" @refreshDataList="getList" />
   </div>
 </template>
@@ -136,25 +119,17 @@ export default {
   components: { OfficeInfo },
   data() {
     return {
-      // 遮罩层
       loading: true,
-      // 非单个禁用
-      single: true,
-      // 非多个禁用
+      single: false,
       multiple: true,
-      // 显示搜索条件
       showSearch: true,
-      // 表格树数据
+      officeIds: [],
+      officeNames: [],
       officeList: [],
-      // 部门树选项
       officeOptions: [],
-      // 弹出层标题
-      title: '',
-      // 是否显示弹出层
+      title: undefined,
       open: false,
-      // 状态数据字典
       statusOptions: [],
-      // 查询参数
       listQuery: {
         officeName: undefined,
         status: undefined
@@ -191,7 +166,6 @@ export default {
         children: node.children
       }
     },
-    // 字典状态字典翻译
     statusFormat(row, column) {
       return this.selectDictLabel(this.statusOptions, row.status)
     },
@@ -206,15 +180,26 @@ export default {
     handleSelectionChange(selection) {
       this.officeIds = selection.map((item) => item.officeId)
       this.officeNames = selection.map((item) => item.officeName)
-      this.single = selection.length !== 1
+      // this.single = selection.length !== 1
       this.multiple = !selection.length
     },
 
     /** 删除按钮操作 */
     handleDelete(row) {
-      const officeIds = row.officeId || this.officeIds
-      const officeNames = row.officeName || this.officeNames
-      this.$confirm('是否确认删除名称为"' + officeNames + '"的数据项?', '警告', {
+      let officeIds = []
+      if (row.officeId) {
+        officeIds.push(row.officeId)
+      } else {
+        officeIds = this.officeIds
+      }
+      let officeNames = []
+      if (row.officeName) {
+        officeNames.push(row.officeName)
+      } else {
+        officeNames = this.officeNames
+      }
+
+      this.$confirm('是否确认删除【' + officeNames + '】' + officeNames.length + '个机构?', '警告', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'

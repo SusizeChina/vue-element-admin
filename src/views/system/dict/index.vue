@@ -68,17 +68,6 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
-          v-permission="['system:dict:edit']"
-          type="success"
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleDictInfo(this.dictIds)"
-        >修改
-        </el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
           v-permission="['system:dict:remove']"
           type="danger"
           icon="el-icon-delete"
@@ -108,7 +97,10 @@
         >清理缓存
         </el-button>
       </el-col>
-      <right-toolbar :show-search.sync="showSearch" @queryTable="getList" />
+      <el-col :span="16.5">
+        <right-toolbar :show-search.sync="showSearch" @queryTable="getList" />
+      </el-col>
+
     </el-row>
 
     <el-table v-loading="loading" :data="typeList" @selection-change="handleSelectionChange">

@@ -25,7 +25,6 @@
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
-
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
@@ -33,11 +32,13 @@
           type="primary"
           icon="el-icon-plus"
           size="mini"
-          @click="handleMenuInfo()"
+          @click="handleMenuInfo"
         >新增
         </el-button>
       </el-col>
-      <right-toolbar :show-search.sync="showSearch" @queryTable="getList" />
+      <el-col :span="22.5">
+        <right-toolbar :show-search.sync="showSearch" @queryTable="getList" />
+      </el-col>
     </el-row>
 
     <el-table
@@ -159,7 +160,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(function() {
-        return deleteMenu({ 'menuId': row.menuId })
+        return deleteMenu(row.menuId)
       }).then(() => {
         this.getList()
         this.msgSuccess('删除成功')

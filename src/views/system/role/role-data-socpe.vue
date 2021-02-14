@@ -1,6 +1,5 @@
 <template>
 
-  <!-- 分配角色数据权限对话框 -->
   <el-dialog :title="title" :visible.sync="openDataScope" width="500px" append-to-body>
     <el-form :model="form" label-width="80px">
       <el-form-item label="角色名称">
@@ -20,9 +19,9 @@
         </el-select>
       </el-form-item>
       <el-form-item v-show="form.dataScope == 2" label="数据权限">
-        <el-checkbox v-model="officeExpand" @change="handleCheckedTreeExpand($event, 'office')">展开/折叠</el-checkbox>
-        <el-checkbox v-model="officeNodeAll" @change="handleCheckedTreeNodeAll($event, 'office')">全选/全不选</el-checkbox>
-        <el-checkbox v-model="form.officeCheckStrictly" @change="handleCheckedTreeConnect($event, 'office')">父子联动
+        <el-checkbox v-model="officeExpand" @change="handleCheckedTreeExpand($event)">展开/折叠</el-checkbox>
+        <el-checkbox v-model="officeNodeAll" @change="handleCheckedTreeNodeAll($event)">全选/全不选</el-checkbox>
+        <el-checkbox v-model="officeCheckStrictly" @change="handleCheckedTreeConnect($event)">父子联动
         </el-checkbox>
         <el-tree
           ref="office"
@@ -31,7 +30,7 @@
           show-checkbox
           default-expand-all
           node-key="officeId"
-          :check-strictly="!form.officeCheckStrictly"
+          :check-strictly="!officeCheckStrictly"
           empty-text="加载中，请稍后"
           :props="officeProps"
         />
@@ -54,6 +53,7 @@ export default {
       title: undefined,
       openDataScope: false,
       officeExpand: true,
+      officeCheckStrictly: true,
       officeNodeAll: false,
       dataScopeOptions: [],
       officeOptions: [],
@@ -106,32 +106,26 @@ export default {
       }
       this.officeExpand = true
       this.officeNodeAll = false
+      this.officeCheckStrictly = true
       this.form = {
         roleId: undefined,
         roleName: undefined,
         roleKey: undefined,
-        officeIds: [],
-        officeCheckStrictly: true
+        officeIds: []
       }
       this.resetForm('form')
     },
     handleCheckedTreeExpand(value, type) {
-      if (type === 'office') {
-        const treeList = this.officeOptions
-        for (let i = 0; i < treeList.length; i++) {
-          this.$refs.office.store.nodesMap[treeList[i].officeId].expanded = value
-        }
+      const treeList = this.officeOptions
+      for (let i = 0; i < treeList.length; i++) {
+        this.$refs.office.store.nodesMap[treeList[i].officeId].expanded = value
       }
     },
-    handleCheckedTreeNodeAll(value, type) {
-      if (type === 'office') {
-        this.$refs.office.setCheckedNodes(value ? this.officeOptions : [])
-      }
+    handleCheckedTreeNodeAll(value) {
+      this.$refs.office.setCheckedNodes(value ? this.officeOptions : [])
     },
-    handleCheckedTreeConnect(value, type) {
-      if (type === 'office') {
-        this.form.officeCheckStrictly = !!value
-      }
+    handleCheckedTreeConnect(value) {
+      this.officeCheckStrictly = value
     },
     handleDataScope(row) {
       this.reset()

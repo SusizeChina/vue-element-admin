@@ -1,6 +1,5 @@
 <template>
 
-  <!-- 添加或修改岗位对话框 -->
   <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
     <el-form ref="form" :model="form" :rules="rules" label-width="80px">
       <el-form-item label="岗位名称" prop="postName">
@@ -18,6 +17,9 @@
           >{{ dict.dictLabel }}
           </el-radio>
         </el-radio-group>
+      </el-form-item>
+      <el-form-item label="显示排序" prop="sort">
+        <el-input-number v-model="form.sort" controls-position="right" :min="0" />
       </el-form-item>
       <el-form-item label="备注" prop="remark">
         <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />

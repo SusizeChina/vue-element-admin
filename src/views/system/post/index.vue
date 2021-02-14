@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form v-show="showSearch" ref="queryForm" :model="listQuery" :inline="true" label-width="68px">
+    <el-form v-show="showSearch" ref="listForm" :model="listQuery" :inline="true" label-width="68px">
       <el-form-item label="岗位编码" prop="postCode">
         <el-input
           v-model="listQuery.postCode"
@@ -48,17 +48,6 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
-          v-permission="['system:post:edit']"
-          type="success"
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handlePostInfo"
-        >修改
-        </el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
           v-permission="['system:post:remove']"
           type="danger"
           icon="el-icon-delete"
@@ -78,12 +67,15 @@
         >导出
         </el-button>
       </el-col>
-      <right-toolbar :show-search.sync="showSearch" @queryTable="getList" />
+      <el-col :span="18">
+        <right-toolbar :show-search.sync="showSearch" @queryTable="getList" />
+      </el-col>
+
     </el-row>
 
     <el-table v-loading="loading" :data="postList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="岗位编号" align="center" prop="postId" />
+      <el-table-column type="index" label="序号" />
       <el-table-column label="岗位编码" align="center" prop="postCode" />
       <el-table-column label="岗位名称" align="center" prop="postName" />
       <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat" />
@@ -126,8 +118,9 @@
 </template>
 
 <script>
-import { getPosts, deletePosts, postExport } from '@/api/system/post'
+import { deletePosts, getPosts, postExport } from '@/api/system/post'
 import PostInfo from './post-info'
+
 export default {
   name: 'Post',
   components: { PostInfo },
@@ -135,6 +128,7 @@ export default {
     return {
       loading: true,
       postIds: [],
+      postNames: [],
       single: true,
       multiple: true,
       showSearch: true,
@@ -178,17 +172,29 @@ export default {
       this.getList()
     },
     resetQuery() {
-      this.resetForm('queryForm')
+      this.resetForm('listForm')
       this.handleQuery()
     },
     handleSelectionChange(selection) {
       this.postIds = selection.map(item => item.postId)
+      this.postNames = selection.map(item => item.postName)
       this.single = selection.length !== 1
       this.multiple = !selection.length
     },
     handleDelete(row) {
-      const postIds = row.postId || this.postIds
-      this.$confirm('是否确认删除岗位编号为"' + postIds + '"的数据项?', '警告', {
+      let postIds = []
+      if (row.postId) {
+        postIds.push(row.postId)
+      } else {
+        postIds = this.postIds
+      }
+      let postNames = []
+      if (row.postName) {
+        postNames.push(row.postName)
+      } else {
+        postNames = this.postNames
+      }
+      this.$confirm('是否确认删除【' + postNames + '】' + postNames.length + '个岗位?', '警告', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
