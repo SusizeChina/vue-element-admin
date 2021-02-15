@@ -115,7 +115,10 @@ function formatRouter(asyncRouterMap) {
     if (menu.children != null && menu.children && menu.children.length) {
       route.children = formatRouter(menu.children)
     }
-    routes.push(route)
+    // 按钮不添加
+    if (menu.menuType !== 'F') {
+      routes.push(route)
+    }
     return true
   })
   return routes

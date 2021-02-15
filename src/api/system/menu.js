@@ -9,17 +9,6 @@ export function getTreeMenu() {
     method: 'get'
   })
 }
-
-/**
- * 查询用户菜单，返回树形结构,带功能按钮
- * @returns {AxiosPromise} 树形结构菜单，带功能按钮
- */
-export function getTreeAction() {
-  return request({
-    url: '/action/tree',
-    method: 'get'
-  })
-}
 /**
  * 新增菜单
  * @param menu 菜单

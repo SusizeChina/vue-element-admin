@@ -46,7 +46,7 @@
 
 <script>
 import { addRole, updateRole, getRoleInfo } from '@/api/system/role'
-import { getTreeAction } from '@/api/system/menu'
+import { getTreeMenu } from '@/api/system/menu'
 
 export default {
   data() {
@@ -88,7 +88,7 @@ export default {
       }
     },
     getMenuTreeSelect() {
-      getTreeAction().then(response => {
+      getTreeMenu().then(response => {
         this.menuOptions = response.data
       })
     },
