@@ -105,7 +105,7 @@
 
     <el-table v-loading="loading" :data="typeList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="字典编号" type="index" align="center" />
+      <el-table-column label="序号" type="index" align="center" />
       <el-table-column label="字典名称" align="center" prop="dictLabel" :show-overflow-tooltip="true" />
       <el-table-column label="字典编号" align="center" :show-overflow-tooltip="true">
         <template slot-scope="scope">
@@ -114,11 +114,20 @@
           </router-link>
         </template>
       </el-table-column>
-      <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat" />
       <el-table-column label="备注" align="center" prop="remarks" :show-overflow-tooltip="true" />
-      <el-table-column label="创建时间" align="center" prop="createTime" width="180">
+      <el-table-column label="编辑时间" align="center" prop="updateTime">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.createTime) }}</span>
+          <span>{{ parseTime(scope.row.updateTime) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="状态" align="center">
+        <template slot-scope="scope">
+          <el-switch
+            v-model="scope.row.status"
+            active-value="0"
+            inactive-value="1"
+            @change="handleStatusChange(scope.row)"
+          />
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -150,14 +159,12 @@
       :limit.sync="listQuery.limit"
       @pagination="getList"
     />
-
-    <!-- 添加或修改字典对话框 -->
     <dict-info ref="dictInfo" @refreshDataList="getList" />
   </div>
 </template>
 
 <script>
-import { getTreeDict, getDicts, deleteDicts } from '@/api/system/dict'
+import { getTreeDict, getDicts, deleteDicts, updateDict } from '@/api/system/dict'
 import DictInfo from './dict-info'
 
 export default {
@@ -208,8 +215,21 @@ export default {
       }
       )
     },
-    statusFormat(row, column) {
-      return this.selectDictLabel(this.statusOptions, row.status)
+    handleStatusChange(row) {
+      const text = row.status === '0' ? '启用' : '停用'
+      this.$confirm('确认要' + text + '【' + row.dictLabel + '】字典吗?', '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(function() {
+        return updateDict({ 'dictId': row.dictId, 'status': row.status })
+      }).then(() => {
+        this.msgSuccess(text + '字典成功')
+        this.getList()
+      }).catch(function() {
+        this.msgSuccess(text + '字典失败')
+        this.getList()
+      })
     },
     handleQuery() {
       this.listQuery.pageNum = 1

@@ -60,6 +60,19 @@ export function getDictInfo(dictId) {
     params: { 'dictId': dictId }
   })
 }
+
+/**
+ * 查询字典详情
+ * @param dictType 字典类型
+ * @returns {AxiosPromise} 成功、失败
+ */
+export function getDictInfoByDictType(dictType) {
+  return request({
+    url: '/dict',
+    method: 'get',
+    params: { 'dictType': dictType }
+  })
+}
 /**
  * 分页查询字典列表
  * @param data 分页信息

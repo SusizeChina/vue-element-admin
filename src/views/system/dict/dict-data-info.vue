@@ -2,7 +2,7 @@
   <!-- 添加或修改参数配置对话框 -->
   <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
     <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-      <el-form-item label="字典名称" prop="type">
+      <el-form-item label="字典名称" prop="dictType">
         <el-select v-model="form.dictType" size="small" :disabled="true">
           <el-option
             v-for="item in typeOptions"
@@ -31,6 +31,9 @@
           </el-radio>
         </el-radio-group>
       </el-form-item>
+      <el-form-item label="描叙" prop="description">
+        <el-input v-model="form.description" type="textarea" placeholder="请输入内容" />
+      </el-form-item>
       <el-form-item label="备注" prop="remarks">
         <el-input v-model="form.remarks" type="textarea" placeholder="请输入内容" />
       </el-form-item>
@@ -43,7 +46,7 @@
 </template>
 
 <script>
-import { getDictInfo, updateDict, addDict } from '@/api/system/dict'
+import { getDictInfo, getDictInfoByDictType, updateDict, addDict } from '@/api/system/dict'
 
 export default {
   data() {
@@ -62,6 +65,21 @@ export default {
         ],
         sort: [
           { required: true, message: '数据顺序不能为空', trigger: 'blur' }
+        ],
+        status: [
+          { required: true, message: '状态不能为空', trigger: 'blur' }
+        ],
+        parentId: [
+          { required: true, message: '父类ID不能为空', trigger: 'blur' }
+        ],
+        dictType: [
+          { required: true, message: '字典类型不能为空', trigger: 'blur' }
+        ],
+        description: [
+          { required: true, message: '描叙不能为空', trigger: 'blur' }
+        ],
+        remarks: [
+          { required: true, message: '备注不能为空', trigger: 'blur' }
         ]
       }
     }
@@ -75,11 +93,11 @@ export default {
     })
   },
   methods: {
-    init(row) {
+    init(row, dictType) {
       if (row.dictId) {
         this.handleUpdate(row)
       } else {
-        this.handleAdd(row)
+        this.handleAdd(dictType)
       }
     },
     statusFormat(row, column) {
@@ -100,14 +118,15 @@ export default {
       }
       this.resetForm('form')
     },
-    /** 新增按钮操作 */
-    handleAdd(row) {
+    handleAdd(dictType) {
       this.reset()
-      this.open = true
-      this.title = '添加字典数据'
-      this.form.dictType = row.dictType
+      this.form.dictType = dictType
+      getDictInfoByDictType(this.form.dictType).then(response => {
+        this.form.parentId = response.data.dictId
+        this.open = true
+        this.title = '添加字典数据'
+      })
     },
-    /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset()
       const dictId = row.dictId
@@ -117,7 +136,6 @@ export default {
         this.title = '修改字典数据'
       })
     },
-    /** 提交按钮 */
     submitForm: function() {
       this.$refs['form'].validate(valid => {
         if (valid) {

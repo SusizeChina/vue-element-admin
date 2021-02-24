@@ -4,8 +4,11 @@
       <el-form-item label="字典名称" prop="dictLabel">
         <el-input v-model="form.dictLabel" placeholder="请输入字典名称" />
       </el-form-item>
-      <el-form-item label="字典类型" prop="dictType">
-        <el-input v-model="form.dictType" placeholder="请输入字典类型" />
+      <el-form-item label="字典编码" prop="dictValue">
+        <el-input v-model="form.dictValue" placeholder="请输入字典编码" />
+      </el-form-item>
+      <el-form-item label="显示排序" prop="sort">
+        <el-input-number v-model="form.sort" controls-position="right" :min="0" />
       </el-form-item>
       <el-form-item label="状态" prop="status">
         <el-radio-group v-model="form.status">
@@ -16,6 +19,9 @@
           >{{ dict.dictLabel }}
           </el-radio>
         </el-radio-group>
+      </el-form-item>
+      <el-form-item label="描叙" prop="description">
+        <el-input v-model="form.description" type="textarea" placeholder="请输入内容" />
       </el-form-item>
       <el-form-item label="备注" prop="remarks">
         <el-input v-model="form.remarks" type="textarea" placeholder="请输入内容" />
@@ -37,19 +43,39 @@ export default {
       title: undefined,
       open: false,
       statusOptions: [],
-      form: {},
+      form: {
+        parentId: '0',
+        dictType: 'parent'
+      },
       rules: {
         dictLabel: [
           { required: true, message: '字典名称不能为空', trigger: 'blur' }
         ],
+        dictValue: [
+          { required: true, message: '字典编码不能为空', trigger: 'blur' }
+        ],
+        sort: [
+          { required: true, message: '显示排序不能为空', trigger: 'blur' }
+        ],
+        status: [
+          { required: true, message: '状态不能为空', trigger: 'blur' }
+        ],
+        parentId: [
+          { required: true, message: '父类ID不能为空', trigger: 'blur' }
+        ],
         dictType: [
           { required: true, message: '字典类型不能为空', trigger: 'blur' }
+        ],
+        description: [
+          { required: true, message: '描叙不能为空', trigger: 'blur' }
+        ],
+        remarks: [
+          { required: true, message: '备注不能为空', trigger: 'blur' }
         ]
       }
     }
   },
   created() {
-    // 字典状态
     this.getDictTypes(this.SYS_DICT_STATUS).then(response => {
       this.statusOptions = response.data
     })
@@ -69,9 +95,11 @@ export default {
     reset() {
       this.form = {
         dictId: undefined,
+        parentId: '0',
         dictLabel: undefined,
-        dictType: undefined,
+        dictType: 'parent',
         status: '0',
+        sort: 0,
         remarks: undefined
       }
       this.resetForm('form')

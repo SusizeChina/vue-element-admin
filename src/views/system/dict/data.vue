@@ -43,7 +43,7 @@
           type="primary"
           icon="el-icon-plus"
           size="mini"
-          @click="handleDictDataInfo()"
+          @click="handleDictDataInfo"
         >新增
         </el-button>
       </el-col>
@@ -68,7 +68,7 @@
         >导出
         </el-button>
       </el-col>
-      <el-col :span="18">
+      <el-col :span="17.5">
         <right-toolbar :show-search.sync="showSearch" @queryTable="getList" />
       </el-col>
     </el-row>
@@ -168,7 +168,7 @@ export default {
   methods: {
     handleDictDataInfo(row) {
       this.$nextTick(() => {
-        this.$refs.dictDataInfo.init(row)
+        this.$refs.dictDataInfo.init(row, this.listQuery.dictType)
       })
     },
     getDictTypeInfo(dictId) {
